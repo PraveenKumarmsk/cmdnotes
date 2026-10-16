@@ -3,7 +3,7 @@
 // Bump VERSION to force an update on every device. Old caches are deleted.
 // Sheet data is NOT cached here (the app keeps its own copy in localStorage).
 // ════════════════════════════════════════════════════════════════════════════
-const VERSION = 'cmdnotes-v1.0.0';
+const VERSION = 'cmdnotes-v2.0.0';
 const CACHE_SHELL   = VERSION + '-shell';
 const CACHE_RUNTIME = VERSION + '-runtime';
 const CACHE_IMAGES  = VERSION + '-images';
