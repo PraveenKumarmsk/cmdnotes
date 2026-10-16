@@ -1,0 +1,33 @@
+{
+  "name": "CMD Notes — Command Reference",
+  "short_name": "CMD Notes",
+  "description": "Your command notes, live from Google Sheets — add, edit, search and copy.",
+  "start_url": "index.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0b1114",
+  "theme_color": "#0b1114",
+  "lang": "en-IN",
+  "dir": "ltr",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Add Command", "short_name": "Add", "description": "Save a new command", "url": "index.html?new=1&source=pwa",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "CCNA / CCNP", "short_name": "CCNA", "description": "Networking commands", "url": "index.html?tab=ccna&source=pwa",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Linux", "short_name": "Linux", "description": "Linux commands", "url": "index.html?tab=linux&source=pwa",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Windows", "short_name": "Windows", "description": "Windows commands", "url": "index.html?tab=windows&source=pwa",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Troubleshooting", "short_name": "Fix", "description": "Troubleshooting commands", "url": "index.html?tab=troubleshooting&source=pwa",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] }
+  ]
+}

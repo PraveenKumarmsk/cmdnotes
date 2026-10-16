@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CMD Notes · Command Reference</title>
+<meta name="description" content="Your command notes, live from Google Sheets — add, edit, search and copy.">
+
+<!-- PWA -->
+<meta name="theme-color" content="#0b1114">
+<meta name="application-name" content="CMD Notes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CMD Notes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+
+<style>
+:root{
+  --bg:#0b1114;--bg2:#0f171b;--panel:#121b20;--panel2:#17232a;--line:#223139;--line2:#2c3f49;
+  --text:#e6eef1;--mute:#8da2ab;--faint:#5f737c;--accent:#5fd9aa;--accent-ink:#06241b;--accent-soft:rgba(95,217,170,.12);
+  --danger:#ff6b6b;--warn:#f5b84b;--blue:#6cb6ff;--code:#0a1013;--shadow:0 10px 30px rgba(0,0,0,.35);
+  --sat:env(safe-area-inset-top);--sab:env(safe-area-inset-bottom);--sal:env(safe-area-inset-left);--sar:env(safe-area-inset-right);
+  --mono:ui-monospace,"JetBrains Mono","Cascadia Code","SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
+  --ui:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+:root[data-theme="light"]{
+  --bg:#f2f5f6;--bg2:#e9eef0;--panel:#ffffff;--panel2:#f6f9fa;--line:#dbe3e6;--line2:#c6d2d7;
+  --text:#14232a;--mute:#566d77;--faint:#8499a3;--accent:#0d9a6e;--accent-ink:#ffffff;--accent-soft:rgba(13,154,110,.1);
+  --danger:#d93f3f;--warn:#b7791f;--blue:#2563eb;--code:#eef3f5;--shadow:0 8px 24px rgba(20,35,42,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:var(--ui);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden;
+  background-image:radial-gradient(900px 500px at 8% -10%,var(--accent-soft),transparent 60%)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input,select,textarea{font:inherit;color:var(--text)}
+::selection{background:var(--accent);color:var(--accent-ink)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ── Shell ─────────────────────────────────────────────── */
+#app{display:grid;grid-template-columns:260px 1fr;grid-template-rows:auto 1fr;height:100%;
+  padding-left:var(--sal);padding-right:var(--sar)}
+header.top{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:calc(10px + var(--sat)) 18px 10px;
+  border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:30}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand img{width:34px;height:34px;border-radius:9px}
+.brand b{font-family:var(--mono);font-size:1.02rem;letter-spacing:.2px;white-space:nowrap}
+.brand b i{color:var(--accent);font-style:normal}
+.search{flex:1;max-width:620px;margin:0 auto;position:relative}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--faint);pointer-events:none}
+.search input{width:100%;padding:11px 44px 11px 40px;border-radius:12px;border:1px solid var(--line);background:var(--panel);outline:none;font-size:.95rem;transition:.15s}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search kbd{position:absolute;right:11px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:.7rem;color:var(--faint);border:1px solid var(--line2);border-radius:6px;padding:1px 7px}
+.search .clr{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:8px;color:var(--mute);display:none}
+.search.has .clr{display:block}.search.has kbd{display:none}
+.tools{display:flex;align-items:center;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:.74rem;font-weight:600;color:var(--mute);border:1px solid var(--line);border-radius:30px;padding:6px 12px;background:var(--panel);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 var(--accent);animation:pulse 2.4s infinite}
+.pill.sync .dot{background:var(--warn);animation:spin 1s linear infinite;border-radius:2px}
+.pill.off .dot,.pill.err .dot{background:var(--danger);animation:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent)}70%,100%{box-shadow:0 0 0 8px transparent}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ibtn{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--panel);display:grid;place-items:center;color:var(--mute);transition:.15s}
+.ibtn:hover{color:var(--text);border-color:var(--line2)}
+.ibtn svg{width:18px;height:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:11px;font-weight:700;font-size:.88rem;transition:.15s;white-space:nowrap}
+.btn svg{width:17px;height:17px}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{border:1px solid var(--line2);color:var(--text)}.btn.ghost:hover{background:var(--panel2)}
+.btn.danger{background:var(--danger);color:#fff}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+#installBtn{display:none;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;padding:9px 16px;border-radius:30px;box-shadow:0 4px 14px rgba(34,197,94,.35)}
+#installBtn.show{display:inline-flex}
+
+/* ── Sidebar ───────────────────────────────────────────── */
+aside{border-right:1px solid var(--line);overflow-y:auto;padding:16px 12px calc(16px + var(--sab));display:flex;flex-direction:column;gap:4px;background:color-mix(in srgb,var(--bg2) 60%,transparent)}
+aside h6{font-size:.68rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--faint);padding:6px 10px}
+.tabbtn{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:10px 12px;border-radius:11px;color:var(--mute);font-weight:600;font-size:.92rem;transition:.12s;border:1px solid transparent}
+.tabbtn:hover{background:var(--panel);color:var(--text)}
+.tabbtn.on{background:var(--panel);color:var(--text);border-color:var(--line2);box-shadow:inset 3px 0 0 var(--accent)}
+.tabbtn .ic{font-size:1.1rem;width:24px;text-align:center}
+.tabbtn .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tabbtn .ct{font-family:var(--mono);font-size:.72rem;color:var(--faint);background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:1px 8px}
+.tabbtn.on .ct{color:var(--accent);border-color:var(--accent-soft)}
+.side-foot{margin-top:auto;padding-top:14px;display:flex;flex-direction:column;gap:8px}
+.side-foot a,.side-foot button{font-size:.82rem;color:var(--mute);text-decoration:none;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;text-align:left}
+.side-foot a:hover,.side-foot button:hover{background:var(--panel);color:var(--text)}
+
+/* ── Main ──────────────────────────────────────────────── */
+main{overflow-y:auto;padding:18px 22px calc(110px + var(--sab));scroll-behavior:smooth}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.chips::-webkit-scrollbar{display:none}
+.mobtabs{display:none}
+.chip{flex:0 0 auto;padding:7px 14px;border-radius:30px;border:1px solid var(--line);background:var(--panel);color:var(--mute);font-size:.8rem;font-weight:600;transition:.12s}
+.chip:hover{color:var(--text)}
+.chip.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.bar{display:flex;align-items:center;gap:12px;margin:14px 0 16px;flex-wrap:wrap}
+.bar h2{font-size:1.25rem;font-weight:800;letter-spacing:-.2px;display:flex;align-items:center;gap:10px}
+.bar h2 small{font-family:var(--mono);font-size:.78rem;font-weight:600;color:var(--faint)}
+.bar .sp{flex:1}
+select.sel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.82rem;color:var(--mute);outline:none}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.seg button{padding:7px 11px;color:var(--faint)}.seg button.on{background:var(--accent-soft);color:var(--accent)}
+.seg svg{width:16px;height:16px;display:block}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;align-items:start}
+.grid.list{grid-template-columns:1fr}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s,transform .15s,box-shadow .15s;position:relative;animation:in .25s ease both}
+.card:hover{border-color:var(--line2);box-shadow:var(--shadow)}
+.card.pending{opacity:.6}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card header{display:flex;align-items:center;gap:8px}
+.badge{font-size:.68rem;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:3px 10px;border-radius:20px;color:hsl(var(--h) 80% 72%);background:hsl(var(--h) 60% 50% / .14);border:1px solid hsl(var(--h) 60% 55% / .25);max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:root[data-theme="light"] .badge{color:hsl(var(--h) 65% 30%);background:hsl(var(--h) 70% 50% / .12)}
+.tagtab{font-size:.68rem;color:var(--faint);font-family:var(--mono)}
+.acts{margin-left:auto;display:flex;gap:2px;opacity:.55;transition:.15s}
+.card:hover .acts,.card:focus-within .acts{opacity:1}
+.acts button{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;color:var(--mute)}
+.acts button:hover{background:var(--panel2);color:var(--text)}
+.acts button.del:hover{color:var(--danger)}
+.acts svg{width:16px;height:16px}
+.cmd{display:flex;align-items:flex-start;gap:10px;background:var(--code);border:1px solid var(--line);border-radius:11px;padding:10px 10px 10px 12px;cursor:pointer;transition:.12s}
+.cmd:hover{border-color:var(--accent)}
+.cmd pre{flex:1;min-width:0;font-family:var(--mono);font-size:.88rem;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:var(--text)}
+.cmd pre::before{content:"›  ";color:var(--accent);font-weight:800}
+.cp{flex:0 0 auto;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--faint);transition:.12s}
+.cmd:hover .cp,.ex:hover .cp{color:var(--accent);background:var(--accent-soft)}
+.cp svg{width:16px;height:16px}
+.cp.done{color:var(--accent-ink)!important;background:var(--accent)!important}
+.purpose{font-size:.9rem;line-height:1.55;color:var(--mute)}
+.ex{position:relative}
+.ex .lbl{font-size:.64rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--faint);margin-bottom:5px;display:block}
+.ex .body{display:flex;gap:8px;align-items:flex-start;border-left:2px solid var(--accent);background:var(--panel2);border-radius:0 10px 10px 0;padding:8px 8px 8px 12px;cursor:pointer}
+.ex pre{flex:1;min-width:0;font-family:var(--mono);font-size:.8rem;line-height:1.55;white-space:pre-wrap;word-break:break-word;color:var(--text);opacity:.92}
+mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;border-radius:3px;padding:0 1px}
+.grid.list .card{flex-direction:row;flex-wrap:wrap;align-items:flex-start}
+.grid.list .card>header{flex:0 0 100%}
+.grid.list .cmd{flex:1 1 300px}.grid.list .purpose{flex:1 1 220px;align-self:center}.grid.list .ex{flex:1 1 260px}
+
+.empty{text-align:center;padding:70px 20px;color:var(--mute)}
+.empty .big{font-size:3rem;margin-bottom:10px}
+.empty h3{color:var(--text);margin-bottom:6px}
+.skel{height:190px;border-radius:16px;background:linear-gradient(90deg,var(--panel) 25%,var(--panel2) 50%,var(--panel) 75%);background-size:200% 100%;animation:sh 1.3s infinite;border:1px solid var(--line)}
+@keyframes sh{to{background-position:-200% 0}}
+.banner{display:none;align-items:center;gap:10px;margin:0 0 14px;padding:10px 14px;border-radius:12px;font-size:.84rem;border:1px solid var(--line);background:var(--panel)}
+.banner.show{display:flex}.banner.warn{border-color:color-mix(in srgb,var(--warn) 50%,transparent);color:var(--warn)}
+.banner.err{border-color:color-mix(in srgb,var(--danger) 50%,transparent);color:var(--danger)}
+.banner button{margin-left:auto;font-weight:700;color:var(--text);text-decoration:underline}
+
+.fab{display:none;position:fixed;right:calc(22px + var(--sar));bottom:calc(24px + var(--sab));z-index:40;display:flex;align-items:center;gap:8px;padding:15px 20px;border-radius:30px;
+  background:var(--accent);color:var(--accent-ink);font-weight:800;box-shadow:0 12px 28px rgba(0,0,0,.4);transition:.15s}
+.fab:hover{transform:translateY(-2px)}.fab svg{width:20px;height:20px}
+.fab:disabled{background:var(--panel2);color:var(--faint);box-shadow:none}
+
+/* ── Modal / sheet ─────────────────────────────────────── */
+.ov{position:fixed;inset:0;background:rgba(2,6,8,.62);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:100;display:none;align-items:center;justify-content:center;padding:18px}
+.ov.show{display:flex;animation:fade .15s}
+@keyframes fade{from{opacity:0}}
+.modal{background:var(--panel);border:1px solid var(--line2);border-radius:20px;width:100%;max-width:560px;max-height:calc(100dvh - 36px);overflow:auto;box-shadow:var(--shadow);animation:pop .2s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes pop{from{transform:translateY(14px) scale(.98);opacity:0}}
+.modal .mh{display:flex;align-items:center;gap:10px;padding:18px 20px 6px}
+.modal .mh h3{font-size:1.1rem;flex:1}
+.modal .mb{padding:10px 20px 6px;display:flex;flex-direction:column;gap:14px}
+.modal .mf{padding:14px 20px 18px;display:flex;gap:10px;align-items:center;position:sticky;bottom:0;background:var(--panel)}
+.fld label{display:block;font-size:.72rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--mute);margin-bottom:6px}
+.fld label em{color:var(--danger);font-style:normal}
+.fld input,.fld select,.fld textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-size:.95rem;outline:none;transition:.15s;resize:vertical}
+.fld textarea{font-family:var(--mono);font-size:.88rem;line-height:1.5;min-height:64px}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.fld .hint{font-size:.72rem;color:var(--faint);margin-top:5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.err-line{color:var(--danger);font-size:.82rem;font-weight:600;display:none}
+.mf .sp{flex:1}
+
+/* ── Toasts ────────────────────────────────────────────── */
+#toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + var(--sab));z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:calc(100% - 32px);max-width:440px}
+.toast{background:var(--panel2);border:1px solid var(--line2);color:var(--text);padding:11px 18px;border-radius:30px;font-size:.86rem;font-weight:600;box-shadow:var(--shadow);animation:in .2s;max-width:100%;text-align:center}
+.toast.ok{border-color:var(--accent)}.toast.bad{border-color:var(--danger);color:var(--danger)}
+
+/* ── iOS install helper ────────────────────────────────── */
+#iosBanner{position:fixed;left:50%;bottom:calc(20px + var(--sab));transform:translate(-50%,160%);width:calc(100% - 32px);max-width:440px;z-index:300;background:var(--panel);border:1px solid var(--line2);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .35s cubic-bezier(.4,0,.2,1);display:none}
+#iosBanner.show{display:block;transform:translate(-50%,0)}
+#iosBanner b{display:block;margin-bottom:6px}#iosBanner p{font-size:.84rem;color:var(--mute);line-height:1.55;margin-bottom:12px}
+#iosBanner p strong{color:var(--accent)}#iosBanner .r{display:flex;justify-content:flex-end}
+
+/* ── Setup screen ──────────────────────────────────────── */
+#setup{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
+#setup .modal{max-width:480px}
+
+/* ── Phone ─────────────────────────────────────────────── */
+@media(max-width:860px){
+  body{overflow:hidden}
+  #app{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  aside{display:none}
+  header.top{flex-wrap:wrap;gap:10px 10px;padding:calc(8px + var(--sat)) 12px 10px}
+  .brand img{width:30px;height:30px}
+  .search{order:3;flex:1 1 100%;max-width:none}
+  .search kbd{display:none}
+  .search input{font-size:16px;padding:12px 40px 12px 40px}
+  .tools{margin-left:auto}
+  .pill{padding:6px 9px}.pill span.t{display:none}
+  .btn.addtop{display:none}
+  main{padding:10px 12px calc(120px + var(--sab))}
+  .mobtabs{display:flex;position:sticky;top:-10px;z-index:20;margin:-10px -12px 0;padding:10px 12px 8px;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .mobtabs .chip{display:flex;align-items:center;gap:6px;padding:8px 13px}
+  .mobtabs .chip b{font-family:var(--mono);font-size:.68rem;opacity:.7;font-weight:600}
+  .bar{margin:10px 0 12px}.bar h2{font-size:1.08rem}
+  .grid{grid-template-columns:1fr;gap:12px}
+  .fab{display:flex;right:16px;bottom:calc(18px + var(--sab));padding:16px 20px}
+  .cmd pre{font-size:.86rem}
+  .ov{align-items:flex-end;padding:0}
+  .modal{max-width:none;border-radius:22px 22px 0 0;max-height:92dvh;animation:sheet .25s cubic-bezier(.2,.9,.3,1)}
+  .modal .mf{padding-bottom:calc(16px + var(--sab))}
+  @keyframes sheet{from{transform:translateY(100%)}}
+  .two{grid-template-columns:1fr}
+  .fld input,.fld select,.fld textarea{font-size:16px}
+  .acts{opacity:1}
+  .grid.list .card{flex-direction:column}
+  #toasts{bottom:calc(88px + var(--sab))}
+}
+@media(max-width:380px){.brand b{font-size:.92rem}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media print{aside,header.top,.fab,.acts,.mobtabs,.bar .seg{display:none!important}body{overflow:visible;background:#fff;color:#000}main{overflow:visible}}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header class="top">
+    <div class="brand"><img src="icons/icon-192.png" alt=""><b>cmd<i>_</i>notes</b></div>
+    <label class="search" id="searchBox">
+      <span class="sr">Search commands</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search command, category, purpose…" autocomplete="off" spellcheck="false" enterkeyhint="search">
+      <kbd>/</kbd>
+      <button class="clr" id="qClr" type="button" aria-label="Clear search">✕</button>
+    </label>
+    <div class="tools">
+      <span class="pill" id="livePill" title="Live sync with Google Sheet"><i class="dot"></i><span class="t" id="liveTxt">Live</span></span>
+      <button id="installBtn" class="btn" type="button">⬇️ Install App</button>
+      <button class="ibtn" id="themeBtn" type="button" aria-label="Toggle theme" title="Theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="btn primary addtop" id="addTop" type="button">＋ Add command</button>
+    </div>
+  </header>
+
+  <aside id="side" aria-label="Sections">
+    <h6>Sections</h6>
+    <div id="sideTabs"></div>
+    <div class="side-foot">
+      <button id="newTabBtn" type="button">＋ New section (tab)</button>
+      <a id="sheetLink" href="#" target="_blank" rel="noopener">📄 Open Google Sheet ↗</a>
+      <button id="lockBtn" type="button" style="display:none">🔒 Unlock editing</button>
+      <button id="setupBtn" type="button">⚙️ Server settings</button>
+    </div>
+  </aside>
+
+  <main id="main">
+    <nav class="chips mobtabs" id="mobTabs" aria-label="Sections"></nav>
+    <div class="banner" id="banner"><span id="bannerTxt"></span><button id="bannerBtn" type="button">Retry</button></div>
+    <div class="bar">
+      <h2 id="title">All commands <small id="count"></small></h2>
+      <span class="sp"></span>
+      <select class="sel" id="sort" aria-label="Sort">
+        <option value="sheet">Sheet order</option>
+        <option value="az">A → Z</option>
+        <option value="cat">By category</option>
+        <option value="new">Newest first</option>
+      </select>
+      <span class="seg" role="group" aria-label="Layout">
+        <button id="vGrid" type="button" aria-label="Cards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+        <button id="vList" type="button" aria-label="List"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      </span>
+    </div>
+    <div class="chips" id="cats" style="margin-bottom:14px"></div>
+    <div class="grid" id="grid"></div>
+  </main>
+</div>
+
+<button class="fab" id="fab" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Add</span></button>
+
+<!-- Add / Edit -->
+<div class="ov" id="editOv" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+  <form class="modal" id="editForm" autocomplete="off">
+    <div class="mh"><h3 id="editTitle">New command</h3><button type="button" class="ibtn" data-close aria-label="Close">✕</button></div>
+    <div class="mb">
+      <div class="two">
+        <div class="fld"><label for="fTab">Section</label><select id="fTab"></select></div>
+        <div class="fld"><label for="fCat">Category</label><input id="fCat" list="catList" placeholder="e.g. Network, Files…"><datalist id="catList"></datalist></div>
+      </div>
+      <div class="fld"><label for="fCmd">Command <em>*</em></label><textarea id="fCmd" rows="2" placeholder="ipconfig /all" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea></div>
+      <div class="fld"><label for="fPurpose">Purpose</label><textarea id="fPurpose" rows="2" style="font-family:var(--ui);font-size:.95rem" placeholder="What does it do?"></textarea></div>
+      <div class="fld"><label for="fEx">Example</label><textarea id="fEx" rows="3" placeholder="ipconfig /all | findstr IPv4" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea><div class="hint">Tip: Ctrl/⌘ + Enter to save</div></div>
+      <div class="err-line" id="editErr"></div>
+    </div>
+    <div class="mf">
+      <button type="button" class="btn ghost" id="delBtn" style="color:var(--danger);display:none">Delete</button>
+      <span class="sp"></span>
+      <button type="button" class="btn ghost" data-close>Cancel</button>
+      <button type="submit" class="btn primary" id="saveBtn">Save</button>
+    </div>
+  </form>
+</div>
+
+<!-- Confirm delete -->
+<div class="ov" id="confOv" role="alertdialog" aria-modal="true">
+  <div class="modal" style="max-width:420px">
+    <div class="mh"><h3>Delete this command?</h3></div>
+    <div class="mb"><div class="cmd" style="cursor:default"><pre id="confCmd"></pre></div><p class="purpose">Ye Google Sheet se bhi hat jayega.</p></div>
+    <div class="mf"><span class="sp"></span><button class="btn ghost" data-close type="button">Cancel</button><button class="btn danger" id="confYes" type="button">Delete</button></div>
+  </div>
+</div>
+
+<!-- New tab -->
+<div class="ov" id="tabOv" role="dialog" aria-modal="true">
+  <form class="modal" id="tabForm" style="max-width:420px" autocomplete="off">
+    <div class="mh"><h3>New section</h3><button type="button" class="ibtn" data-close aria-label="Close">✕</button></div>
+    <div class="mb"><div class="fld"><label for="tName">Tab name</label><input id="tName" maxlength="60" placeholder="e.g. Docker"><div class="hint">Google Sheet me naya tab (cmds, category, purpose, example columns ke saath) ban jayega.</div></div><div class="err-line" id="tabErr"></div></div>
+    <div class="mf"><span class="sp"></span><button class="btn ghost" data-close type="button">Cancel</button><button class="btn primary" type="submit">Create</button></div>
+  </form>
+</div>
+
+<!-- Unlock -->
+<div class="ov" id="keyOv" role="dialog" aria-modal="true">
+  <form class="modal" id="keyForm" style="max-width:400px" autocomplete="off">
+    <div class="mh"><h3>🔒 Unlock editing</h3><button type="button" class="ibtn" data-close aria-label="Close">✕</button></div>
+    <div class="mb"><div class="fld"><label for="kIn">Edit password</label><input id="kIn" type="password" autocomplete="off"></div><div class="err-line" id="keyErr"></div></div>
+    <div class="mf"><span class="sp"></span><button class="btn ghost" data-close type="button">Cancel</button><button class="btn primary" type="submit">Unlock</button></div>
+  </form>
+</div>
+
+<!-- First-run server URL -->
+<div id="setup">
+  <form class="modal" id="setupForm" autocomplete="off">
+    <div class="mh"><h3>⚙️ Connect your Google Sheet</h3></div>
+    <div class="mb">
+      <p class="purpose">Apps Script ka <b>Web app URL</b> paste karo (Deploy → Manage deployments → URL, <b>/exec</b> par khatam hota hai). Ye sirf is device me save hota hai.</p>
+      <div class="fld"><label for="sUrl">Web app URL</label><input id="sUrl" type="url" inputmode="url" placeholder="https://script.google.com/macros/s/…/exec"></div>
+      <div class="err-line" id="sErr"></div>
+    </div>
+    <div class="mf"><span class="sp"></span><button class="btn ghost" type="button" id="sCancel" style="display:none">Cancel</button><button class="btn primary" type="submit">Save &amp; open</button></div>
+  </form>
+</div>
+
+<div id="iosBanner"><b>📲 Install CMD Notes</b><p>Safari me neeche <strong>Share ⎋</strong> dabao, phir <strong>Add to Home Screen ➕</strong> chuno.</p><div class="r"><button class="btn primary" id="iosOk" type="button">Got it</button></div></div>
+<div id="toasts" aria-live="polite"></div>
+
+<script>
+"use strict";
+(function () {
+
+// ══ CONFIG ══════════════════════════════════════════════════════════════════
+// Paste your Apps Script Web app URL (ends with /exec) here to skip the first-run prompt.
+var GAS_URL = "";
+var POLL_MS = 15000;
+// ═════════════════════════════════════════════════════════════════════════════
+
+var LS = { url: "cmdn_url", cache: "cmdn_cache", tab: "cmdn_tab", theme: "cmdn_theme", key: "cmdn_key", view: "cmdn_view", sort: "cmdn_sort" };
+var $ = function (id) { return document.getElementById(id); };
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+
+var S = { tabs: [], items: [], locked: false, sheetUrl: "", tab: "__all", cat: "", q: "", sort: "sheet", view: "grid",
+          loaded: false, lastSync: 0, sig: "", key: lsGet(LS.key) || "", busy: 0, queue: [], editing: null, delItem: null, offline: false };
+
+/* ───────────── helpers ───────────── */
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (m) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]; }); }
+function reEsc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+function hl(text, q) {
+  text = String(text || "");
+  if (!q) return esc(text);
+  var terms = q.split(/\s+/).filter(Boolean).map(reEsc);
+  if (!terms.length) return esc(text);
+  var re = new RegExp("(" + terms.join("|") + ")", "ig"), out = "", last = 0, m;
+  while ((m = re.exec(text))) {
+    if (m[0] === "") { re.lastIndex++; continue; }
+    out += esc(text.slice(last, m.index)) + "<mark>" + esc(m[0]) + "</mark>";
+    last = m.index + m[0].length;
+  }
+  return out + esc(text.slice(last));
+}
+function hue(s) { var h = 0; s = String(s || "x").toLowerCase(); for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360; return h; }
+function tabIcon(n) {
+  n = String(n).toLowerCase();
+  if (/win/.test(n)) return "🪟"; if (/lin|lun|ubuntu|unix|bash/.test(n)) return "🐧"; if (/ccn|cisco|net/.test(n)) return "🌐";
+  if (/trouble|fix|debug/.test(n)) return "🛠️"; if (/other|misc/.test(n)) return "📦"; if (/docker|kube|cloud/.test(n)) return "☁️"; return "📄";
+}
+function ago(ts) {
+  if (!ts) return "";
+  var s = Math.round((Date.now() - ts) / 1000);
+  return s < 8 ? "just now" : s < 60 ? s + "s ago" : s < 3600 ? Math.round(s / 60) + "m ago" : Math.round(s / 3600) + "h ago";
+}
+function toast(msg, kind, ms) {
+  var t = document.createElement("div"); t.className = "toast " + (kind || ""); t.textContent = msg;
+  $("toasts").appendChild(t); setTimeout(function () { t.remove(); }, ms || 2400);
+}
+var ICON = {
+  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>',
+  ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+  del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>'
+};
+
+/* ───────────── server ───────────── */
+function gasUrl() { return (GAS_URL || lsGet(LS.url) || "").trim(); }
+function validUrl(v) { try { var u = new URL(v); return u.protocol === "https:" && u.hostname === "script.google.com" && /\/exec$/.test(u.pathname); } catch (e) { return false; } }
+function api(action, data) {
+  var base = gasUrl();
+  if (!base) { showSetup(false); return Promise.reject(new Error("Server URL set nahi hai.")); }
+  if (navigator.onLine === false) return Promise.reject(new Error("OFFLINE"));
+  var body = Object.assign({ action: action, key: S.key }, data || {});
+  return fetch(base, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body), redirect: "follow" })
+    .then(function (r) { return r.text(); })
+    .then(function (t) {
+      var j; try { j = JSON.parse(t); } catch (e) { throw new Error("BADREPLY"); }
+      if (!j.ok && j.error) throw new Error(j.error);
+      return j;
+    });
+}
+function friendly(e) {
+  var m = (e && e.message) || String(e);
+  if (m === "OFFLINE") return "Offline ho — internet aane par try karo.";
+  if (m === "EDIT_KEY_REQUIRED") return "Editing locked hai — pehle password se unlock karo.";
+  if (m === "BADREPLY") return "Server ka reply galat hai. Apps Script ko 'New version' deploy kiya? (Access: Anyone)";
+  if (/failed to fetch|networkerror|load failed/i.test(m)) return "Server tak nahi pahunch paya. Check: Apps Script deploy (New version), Access = Anyone, aur /exec URL sahi hai.";
+  return m;
+}
+
+/* ───────────── state ↔ storage ───────────── */
+function applyData(d, fromCache) {
+  var sig = JSON.stringify([d.tabs, d.items]);
+  S.locked = !!d.locked; S.sheetUrl = d.sheetUrl || S.sheetUrl;
+  var changed = sig !== S.sig;
+  S.sig = sig; S.tabs = d.tabs || []; S.items = d.items || []; S.loaded = true;
+  if (!fromCache) { S.lastSync = d.ts || Date.now(); }
+  if (S.tab !== "__all" && !S.tabs.some(function (t) { return t.name === S.tab; })) S.tab = "__all";
+  return changed;
+}
+function saveCache() { lsSet(LS.cache, JSON.stringify({ tabs: S.tabs, items: S.items, locked: S.locked, sheetUrl: S.sheetUrl, ts: S.lastSync })); }
+
+/* ───────────── sync ───────────── */
+var syncing = false, syncAgain = false;
+function setLive(kind, txt) { var p = $("livePill"); p.className = "pill " + (kind || ""); $("liveTxt").textContent = txt; }
+function refreshLive() {
+  if (S.offline) return setLive("off", "Offline" + (S.lastSync ? " · " + ago(S.lastSync) : ""));
+  if (syncing || S.busy) return setLive("sync", "Syncing…");
+  if (S.lastSync) setLive("", "Live · " + ago(S.lastSync));
+}
+function sync(silent) {
+  if (syncing) { if (!silent) syncAgain = true; return Promise.resolve(); }
+  syncing = true; refreshLive();
+  return api("list").then(function (d) {
+    S.offline = false; hideBanner();
+    if (S.busy) return;                         // a write is in flight; its own sync will follow
+    var changed = applyData(d, false);
+    saveCache();
+    if (changed || !silent) renderAll();
+  }).catch(function (e) {
+    var m = (e && e.message) || "";
+    if (m === "OFFLINE") { S.offline = true; if (!S.loaded) showBanner("warn", "Offline — cached data dikh raha hai."); }
+    else { showBanner("err", friendly(e), true); }
+    if (!S.loaded) { S.failed = true; renderAll(); }
+  }).then(function () { syncing = false; refreshLive(); if (syncAgain) { syncAgain = false; return sync(false); } });
+}
+function showBanner(kind, txt, retry) { var b = $("banner"); b.className = "banner show " + kind; $("bannerTxt").textContent = txt; $("bannerBtn").style.display = retry ? "" : "none"; }
+function hideBanner() { $("banner").className = "banner"; }
+$("bannerBtn").onclick = function () { sync(false); };
+
+setInterval(function () { if (!document.hidden && navigator.onLine !== false && !S.busy && gasUrl()) sync(true); }, POLL_MS);
+setInterval(refreshLive, 5000);
+document.addEventListener("visibilitychange", function () { if (!document.hidden && gasUrl()) sync(true); });
+window.addEventListener("online", function () { S.offline = false; toast("Back online", "ok"); sync(true); });
+window.addEventListener("offline", function () { S.offline = true; refreshLive(); toast("Offline — cached commands dikh rahe hain"); });
+
+/* ───────────── write queue (optimistic) ───────────── */
+function enqueue(job) {
+  S.busy++; refreshLive();
+  S.queue = S.queue.then ? S.queue : Promise.resolve();
+  S.queue = S.queue.then(job).catch(function (e) { toast(friendly(e), "bad", 4200); if ((e && e.message) === "EDIT_KEY_REQUIRED") { S.key = ""; lsDel(LS.key); } })
+    .then(function () { S.busy--; if (!S.busy) return sync(false); });
+  return S.queue;
+}
+S.queue = Promise.resolve();
+function canEdit() { if (S.offline || navigator.onLine === false) { toast("Offline — add/edit internet aane par hoga", "bad"); return false; } if (S.locked && !S.key) { openKey(); return false; } return true; }
+function pick(it) { return { cmd: it.cmd, category: it.category, purpose: it.purpose, example: it.example }; }
+
+/* ───────────── render ───────────── */
+function counts() { var c = {}; S.items.forEach(function (i) { c[i.tab] = (c[i.tab] || 0) + 1; }); return c; }
+function renderTabs() {
+  var c = counts(), total = S.items.length, html = "", mob = "";
+  function btn(name, label, icon, n) {
+    var on = S.tab === name ? " on" : "";
+    html += '<button class="tabbtn' + on + '" data-tab="' + esc(name) + '"><span class="ic">' + icon + '</span><span class="nm">' + esc(label) + '</span><span class="ct">' + n + '</span></button>';
+    mob += '<button class="chip' + on + '" data-tab="' + esc(name) + '">' + icon + " " + esc(label) + " <b>" + n + "</b></button>";
+  }
+  btn("__all", "All commands", "⌘", total);
+  S.tabs.forEach(function (t) { btn(t.name, t.name.replace(/_/g, " "), tabIcon(t.name), c[t.name] || 0); });
+  $("sideTabs").innerHTML = html; $("mobTabs").innerHTML = mob;
+  var onChip = $("mobTabs").querySelector(".on"); if (onChip && onChip.scrollIntoView) { try { onChip.scrollIntoView({ inline: "center", block: "nearest" }); } catch (e) {} }
+}
+function visibleBase() { return S.items.filter(function (i) { return S.tab === "__all" || i.tab === S.tab; }); }
+function renderCats() {
+  var base = visibleBase(), m = {};
+  base.forEach(function (i) { var k = (i.category || "").trim(); if (k) m[k] = (m[k] || 0) + 1; });
+  var names = Object.keys(m).sort(function (a, b) { return a.localeCompare(b); });
+  if (S.cat && !m[S.cat]) S.cat = "";
+  var h = names.length > 1 ? '<button class="chip' + (S.cat ? "" : " on") + '" data-cat="">All</button>' : "";
+  if (names.length > 1) names.forEach(function (n) { h += '<button class="chip' + (S.cat === n ? " on" : "") + '" data-cat="' + esc(n) + '">' + esc(n) + " · " + m[n] + "</button>"; });
+  $("cats").innerHTML = h; $("cats").style.display = h ? "" : "none";
+}
+function filtered() {
+  var q = S.q.trim().toLowerCase(), terms = q ? q.split(/\s+/) : [];
+  var list = visibleBase().filter(function (i) {
+    if (S.cat && (i.category || "").trim() !== S.cat) return false;
+    if (!terms.length) return true;
+    var hay = (i.cmd + " " + i.category + " " + i.purpose + " " + i.example + " " + i.tab).toLowerCase();
+    return terms.every(function (t) { return hay.indexOf(t) >= 0; });
+  });
+  if (S.sort === "az") list.sort(function (a, b) { return a.cmd.localeCompare(b.cmd); });
+  else if (S.sort === "cat") list.sort(function (a, b) { return (a.category || "~").localeCompare(b.category || "~") || a.cmd.localeCompare(b.cmd); });
+  else if (S.sort === "new") list.sort(function (a, b) { return (b.tmp ? 1e9 : 0) + (b.row || 0) - ((a.tmp ? 1e9 : 0) + (a.row || 0)); });
+  return list;
+}
+function card(i, idx) {
+  var q = S.q.trim();
+  return '<article class="card' + (i.tmp ? " pending" : "") + '" data-i="' + idx + '" style="--h:' + hue(i.category || i.tab) + ';animation-delay:' + Math.min(idx, 12) * 18 + 'ms">' +
+    '<header>' + (i.category ? '<span class="badge">' + hl(i.category, q) + "</span>" : "") +
+    (S.tab === "__all" ? '<span class="tagtab">' + esc(i.tab) + "</span>" : "") +
+    '<div class="acts"><button data-act="edit" aria-label="Edit" title="Edit">' + ICON.edit + '</button><button class="del" data-act="del" aria-label="Delete" title="Delete">' + ICON.del + "</button></div></header>" +
+    '<div class="cmd" data-act="copy-cmd" title="Click to copy"><pre>' + hl(i.cmd, q) + '</pre><span class="cp">' + ICON.copy + "</span></div>" +
+    (i.purpose ? '<p class="purpose">' + hl(i.purpose, q) + "</p>" : "") +
+    (i.example ? '<div class="ex"><span class="lbl">Example</span><div class="body" data-act="copy-ex" title="Click to copy"><pre>' + hl(i.example, q) + '</pre><span class="cp">' + ICON.copy + "</span></div></div>" : "") +
+    "</article>";
+}
+var shown = [];
+function renderGrid() {
+  var g = $("grid");
+  g.className = "grid" + (S.view === "list" ? " list" : "");
+  if (!S.loaded && S.failed) { g.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="big">📡</div><h3>Data load nahi hua</h3><p>Upar ka message dekho, phir Retry dabao.</p></div>'; $("count").textContent = ""; return; }
+  if (!S.loaded) { g.innerHTML = '<div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>'; $("count").textContent = ""; return; }
+  shown = filtered();
+  $("count").textContent = shown.length + (shown.length === 1 ? " item" : " items");
+  if (!shown.length) {
+    var any = S.items.length > 0;
+    g.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="big">' + (any ? "🔍" : "📝") + "</div><h3>" + (any ? "Kuch nahi mila" : "Abhi koi command nahi") + "</h3><p>" +
+      (any ? "Search ya filter badal ke dekho." : "＋ Add dabao aur apni pehli command save karo.") + "</p></div>";
+    return;
+  }
+  g.innerHTML = shown.map(card).join("");
+}
+function renderTitle() {
+  $("title").firstChild.nodeValue = (S.tab === "__all" ? "All commands" : S.tab.replace(/_/g, " ")) + " ";
+  document.title = (S.tab === "__all" ? "" : S.tab.replace(/_/g, " ") + " · ") + "CMD Notes";
+}
+function renderSide() {
+  $("sheetLink").style.display = S.sheetUrl ? "" : "none"; if (S.sheetUrl) $("sheetLink").href = S.sheetUrl;
+  $("lockBtn").style.display = S.locked && !S.key ? "" : "none";
+  $("fab").disabled = false; $("addTop").disabled = false;
+  $("vGrid").classList.toggle("on", S.view === "grid"); $("vList").classList.toggle("on", S.view === "list");
+}
+function renderAll() { renderTabs(); renderCats(); renderTitle(); renderSide(); renderGrid(); }
+
+/* ───────────── interactions ───────────── */
+function setTab(name) { S.tab = name; S.cat = ""; lsSet(LS.tab, name); renderAll(); $("main").scrollTo({ top: 0 }); }
+document.addEventListener("click", function (e) {
+  var t = e.target.closest("[data-tab]"); if (t && (t.closest("#sideTabs") || t.closest("#mobTabs"))) return setTab(t.getAttribute("data-tab"));
+  var c = e.target.closest("[data-cat]"); if (c && c.closest("#cats")) { S.cat = c.getAttribute("data-cat"); renderCats(); renderGrid(); return; }
+  var cl = e.target.closest("[data-close]"); if (cl) return closeAll();
+  if (e.target.classList && e.target.classList.contains("ov")) return closeAll();
+  var a = e.target.closest("[data-act]"); if (!a) return;
+  var art = a.closest(".card"); if (!art) return;
+  var it = shown[+art.getAttribute("data-i")]; if (!it) return;
+  var act = a.getAttribute("data-act");
+  if (act === "edit") return openEdit(it);
+  if (act === "del") return askDelete(it);
+  if (act === "copy-cmd") return copy(it.cmd, a);
+  if (act === "copy-ex") return copy(it.example, a);
+});
+function copy(text, el) {
+  function done() {
+    var b = el.querySelector(".cp"); if (b) { var old = b.innerHTML; b.innerHTML = ICON.ok; b.classList.add("done"); setTimeout(function () { b.innerHTML = old; b.classList.remove("done"); }, 1100); }
+    toast("Copied", "ok", 1200);
+  }
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
+  function fallback() {
+    var ta = document.createElement("textarea"); ta.value = text; ta.style.cssText = "position:fixed;opacity:0"; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); done(); } catch (e) { toast("Copy nahi hua — manually select karo", "bad"); } ta.remove();
+  }
+}
+var qEl = $("q");
+qEl.addEventListener("input", function () { S.q = qEl.value; $("searchBox").classList.toggle("has", !!S.q); renderGrid(); });
+$("qClr").onclick = function () { qEl.value = ""; S.q = ""; $("searchBox").classList.remove("has"); renderGrid(); qEl.focus(); };
+$("sort").onchange = function () { S.sort = this.value; lsSet(LS.sort, S.sort); renderGrid(); };
+$("vGrid").onclick = function () { S.view = "grid"; lsSet(LS.view, "grid"); renderSide(); renderGrid(); };
+$("vList").onclick = function () { S.view = "list"; lsSet(LS.view, "list"); renderSide(); renderGrid(); };
+$("themeBtn").onclick = function () { setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark"); };
+function setTheme(t) { document.documentElement.setAttribute("data-theme", t); lsSet(LS.theme, t); var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t === "dark" ? "#0b1114" : "#f2f5f6"; }
+
+/* ── modals ── */
+function openOv(id) { $(id).classList.add("show"); }
+function closeAll() { document.querySelectorAll(".ov.show").forEach(function (o) { o.classList.remove("show"); }); S.editing = null; S.delItem = null; if ($("setup").style.display === "flex" && gasUrl()) $("setup").style.display = "none"; }
+function fillTabSelect(sel) {
+  $("fTab").innerHTML = S.tabs.map(function (t) { return '<option value="' + esc(t.name) + '">' + esc(t.name.replace(/_/g, " ")) + "</option>"; }).join("");
+  if (sel) $("fTab").value = sel;
+}
+function fillCatList(tab) {
+  var m = {}; S.items.forEach(function (i) { if (!tab || i.tab === tab) { var k = (i.category || "").trim(); if (k) m[k] = 1; } });
+  $("catList").innerHTML = Object.keys(m).sort().map(function (k) { return '<option value="' + esc(k) + '">'; }).join("");
+}
+function openAdd() {
+  if (!canEdit()) return;
+  if (!S.tabs.length) return toast("Pehle sheet load hone do ya naya section banao", "bad");
+  S.editing = null;
+  $("editTitle").textContent = "New command"; $("delBtn").style.display = "none"; $("fTab").disabled = false;
+  fillTabSelect(S.tab !== "__all" ? S.tab : (lsGet(LS.tab) && S.tabs.some(function (t) { return t.name === lsGet(LS.tab); }) ? lsGet(LS.tab) : S.tabs[0].name));
+  fillCatList($("fTab").value);
+  $("fCmd").value = ""; $("fCat").value = S.cat || ""; $("fPurpose").value = ""; $("fEx").value = ""; $("editErr").style.display = "none";
+  openOv("editOv"); setTimeout(function () { $("fCmd").focus(); }, 60);
+}
+function openEdit(it) {
+  if (!canEdit()) return;
+  if (it.tmp) return toast("Save ho raha hai… thodi der ruko");
+  S.editing = it;
+  $("editTitle").textContent = "Edit command"; $("delBtn").style.display = ""; fillTabSelect(it.tab); $("fTab").disabled = true;
+  fillCatList(it.tab);
+  $("fCmd").value = it.cmd; $("fCat").value = it.category; $("fPurpose").value = it.purpose; $("fEx").value = it.example; $("editErr").style.display = "none";
+  openOv("editOv"); setTimeout(function () { $("fCmd").focus(); }, 60);
+}
+$("fTab").onchange = function () { fillCatList(this.value); };
+$("fab").onclick = openAdd; $("addTop").onclick = openAdd;
+$("editForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  var d = { cmd: $("fCmd").value, category: $("fCat").value, purpose: $("fPurpose").value, example: $("fEx").value };
+  if (!d.cmd.trim()) { var er = $("editErr"); er.textContent = "Command likhna zaroori hai."; er.style.display = "block"; $("fCmd").focus(); return; }
+  var tab = $("fTab").value, it = S.editing;
+  closeAll();
+  if (it) {
+    var orig = pick(it), row = it.row;
+    Object.assign(it, d, { tmp: true }); renderGrid();
+    enqueue(function () { return api("update", Object.assign({ tab: it.tab, row: row, orig: orig }, d)).then(function () { toast("Saved ✓", "ok"); }); });
+  } else {
+    S.items.push(Object.assign({ tab: tab, row: 0, tmp: true }, d)); renderAll();
+    enqueue(function () { return api("add", Object.assign({ tab: tab }, d)).then(function () { toast("Added ✓", "ok"); }); });
+  }
+});
+$("editForm").addEventListener("keydown", function (e) { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); $("editForm").requestSubmit(); } });
+$("delBtn").onclick = function () { var it = S.editing; closeAll(); if (it) askDelete(it); };
+function askDelete(it) {
+  if (!canEdit()) return;
+  if (it.tmp) return toast("Save ho raha hai… thodi der ruko");
+  S.delItem = it; $("confCmd").textContent = it.cmd; openOv("confOv");
+}
+$("confYes").onclick = function () {
+  var it = S.delItem; closeAll(); if (!it) return;
+  S.items = S.items.filter(function (x) { return x !== it; }); renderAll();
+  enqueue(function () { return api("delete", { tab: it.tab, row: it.row, orig: pick(it) }).then(function () { toast("Deleted", "ok"); }); });
+};
+/* new tab */
+$("newTabBtn").onclick = function () { if (!canEdit()) return; $("tName").value = ""; $("tabErr").style.display = "none"; openOv("tabOv"); setTimeout(function () { $("tName").focus(); }, 60); };
+$("tabForm").addEventListener("submit", function (e) {
+  e.preventDefault(); var n = $("tName").value.trim(); if (!n) return;
+  closeAll(); enqueue(function () { return api("addTab", { name: n }).then(function () { S.tab = n; lsSet(LS.tab, n); toast("Section ban gaya ✓", "ok"); }); });
+});
+/* unlock */
+function openKey() { $("kIn").value = ""; $("keyErr").style.display = "none"; openOv("keyOv"); setTimeout(function () { $("kIn").focus(); }, 60); }
+$("lockBtn").onclick = openKey;
+$("keyForm").addEventListener("submit", function (e) {
+  e.preventDefault(); var k = $("kIn").value;
+  S.key = k;
+  api("checkKey", { key: k }).then(function (r) { if (r.ok) { lsSet(LS.key, k); closeAll(); renderSide(); toast("Unlocked ✓", "ok"); } else { S.key = ""; $("keyErr").textContent = "Password galat hai."; $("keyErr").style.display = "block"; } })
+    .catch(function (er) { S.key = ""; $("keyErr").textContent = friendly(er); $("keyErr").style.display = "block"; });
+});
+/* setup */
+function showSetup(cancelable) { $("sUrl").value = gasUrl(); $("sErr").style.display = "none"; $("sCancel").style.display = cancelable ? "" : "none"; $("setup").style.display = "flex"; }
+$("setupBtn").onclick = function () { showSetup(true); };
+$("sCancel").onclick = function () { $("setup").style.display = "none"; };
+$("setupForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  var v = $("sUrl").value.trim().split("?")[0].split("#")[0];
+  if (!validUrl(v)) { $("sErr").textContent = "https://script.google.com/…/exec wala URL daalo."; $("sErr").style.display = "block"; return; }
+  lsSet(LS.url, v); lsDel(LS.cache); location.reload();
+});
+/* keyboard */
+document.addEventListener("keydown", function (e) {
+  var typing = /input|textarea|select/i.test((e.target.tagName || ""));
+  if (e.key === "Escape") { if (document.querySelector(".ov.show")) closeAll(); else if (S.q) $("qClr").click(); return; }
+  if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === "/") { e.preventDefault(); qEl.focus(); qEl.select(); }
+  else if (e.key === "n") { e.preventDefault(); openAdd(); }
+});
+
+/* ───────────── PWA: install, SW, URL params ───────────── */
+function isStandalone() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.matchMedia("(display-mode: minimal-ui)").matches || window.navigator.standalone === true;
+}
+function isIOSSafari() {
+  var ua = navigator.userAgent, isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream, isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua);
+  return isIOS && isSafari;
+}
+var deferredInstallPrompt = null, installBtn = $("installBtn");
+window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); deferredInstallPrompt = e; if (!isStandalone()) installBtn.classList.add("show"); });
+window.addEventListener("appinstalled", function () { deferredInstallPrompt = null; installBtn.classList.remove("show"); toast("✅ App installed", "ok"); });
+installBtn.onclick = async function () {
+  if (!deferredInstallPrompt) {
+    if (isIOSSafari()) $("iosBanner").classList.add("show"); else toast("Browser menu → Install app / Add to Home screen", "", 4500);
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  try { await deferredInstallPrompt.userChoice; } catch (e) {}
+  deferredInstallPrompt = null; installBtn.classList.remove("show");
+};
+$("iosOk").onclick = function () { $("iosBanner").classList.remove("show"); };
+if (!isStandalone() && isIOSSafari()) installBtn.classList.add("show");     // iOS never fires beforeinstallprompt
+
+if ("serviceWorker" in navigator) {
+  var hadCtl = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange", function () { if (hadCtl) toast("🚀 App updated — reload for the latest", "ok", 5000); hadCtl = true; });
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").then(function (reg) { setInterval(function () { reg.update(); }, 60 * 60 * 1000); }).catch(function () {});
+  });
+}
+
+/* ───────────── boot ───────────── */
+function matchTab(param) {
+  param = String(param || "").toLowerCase().replace(/[^a-z0-9]/g, ""); if (!param) return null;
+  var names = S.tabs.map(function (t) { return t.name; });
+  for (var i = 0; i < names.length; i++) if (names[i].toLowerCase().replace(/[^a-z0-9]/g, "") === param) return names[i];
+  for (i = 0; i < names.length; i++) { var n = names[i].toLowerCase().replace(/[^a-z0-9]/g, ""); if (n.indexOf(param) === 0 || param.indexOf(n) === 0) return names[i]; }
+  if (/^(lin|lun)/.test(param)) for (i = 0; i < names.length; i++) if (/lin|lun/i.test(names[i])) return names[i];
+  if (/^ccn/.test(param)) for (i = 0; i < names.length; i++) if (/ccn/i.test(names[i])) return names[i];
+  return null;
+}
+var params = new URLSearchParams(location.search);
+var wantTab = params.get("tab"), wantNew = params.get("new") === "1";
+if (params.get("source") === "pwa" || isStandalone()) { lsSet("cmdn_launches", String((parseInt(lsGet("cmdn_launches"), 10) || 0) + 1)); }
+if (params.get("setup") === "1") { lsDel(LS.url); }
+
+setTheme(lsGet(LS.theme) || (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"));
+S.sort = lsGet(LS.sort) || "sheet"; $("sort").value = S.sort; S.view = lsGet(LS.view) || "grid";
+S.tab = lsGet(LS.tab) || "__all";
+
+(function loadCache() {
+  try { var c = JSON.parse(lsGet(LS.cache) || "null"); if (c && c.items) { applyData(c, true); S.lastSync = c.ts || 0; } } catch (e) {}
+})();
+function afterFirstLoad() {
+  if (wantTab) { var m = matchTab(wantTab); if (m) { S.tab = m; lsSet(LS.tab, m); } wantTab = null; renderAll(); }
+  if (wantNew) { wantNew = false; setTimeout(openAdd, 250); }
+}
+renderAll();
+if (S.loaded) afterFirstLoad();
+if (!gasUrl()) { showSetup(false); }
+else { sync(false).then(function () { if (!S.loaded) return; afterFirstLoad(); }); }
+if (S.offline === false && navigator.onLine === false) { S.offline = true; refreshLive(); }
+
+})();
+</script>
+</body>
+</html>
