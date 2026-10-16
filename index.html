@@ -139,7 +139,7 @@ select.sel{background:var(--panel);border:1px solid var(--line);border-radius:10
 mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;border-radius:3px;padding:0 1px}
 .grid.list .card{flex-direction:row;flex-wrap:wrap;align-items:flex-start}
 .grid.list .card>header{flex:0 0 100%}
-.grid.list .cmd{flex:1 1 300px}.grid.list .purpose{flex:1 1 220px;align-self:center}.grid.list .ex{flex:1 1 260px}
+.grid.list .cmd{flex:1 1 300px}.grid.list .purpose{flex:1 1 220px;align-self:center}.grid.list .ex{flex:1 1 260px}.grid.list .cardfoot{flex:0 0 100%}
 
 .empty{text-align:center;padding:70px 20px;color:var(--mute)}
 .empty .big{font-size:3rem;margin-bottom:10px}
@@ -191,6 +191,37 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
 #setup{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
 #setup .modal{max-width:480px}
 
+/* ── Organise: filter rows, tags, groups, favourites ───── */
+.frow{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.frow .fl{flex:0 0 66px;padding-top:8px;font-size:.64rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--faint)}
+.frow .chips{flex:1;flex-wrap:wrap;overflow:visible}
+.chip.tg::before{content:"#";opacity:.55;margin-right:2px}
+.chip.on.tg::before{opacity:.8}
+.chip.fav.on{background:var(--warn);border-color:var(--warn);color:#2a1d00}
+.cardfoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;flex:1;min-width:0}
+.tgp{font-family:var(--mono);font-size:.7rem;color:var(--mute);border:1px solid var(--line);border-radius:6px;padding:1px 7px;cursor:pointer;transition:.12s}
+.tgp::before{content:"#";opacity:.55}
+.tgp:hover{color:var(--accent);border-color:var(--accent)}
+.when{font-size:.68rem;color:var(--faint);white-space:nowrap}
+.badge{cursor:pointer}
+.acts .star{font-size:1.05rem;line-height:1}
+.acts .star.on{color:var(--warn);opacity:1}
+.card.isfav{border-color:color-mix(in srgb,var(--warn) 40%,var(--line))}
+.grp{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:10px 4px 8px;margin-top:6px;border-bottom:1px solid var(--line);cursor:pointer;user-select:none}
+.grp:first-child{margin-top:0}
+.grp .chev{display:inline-block;transition:transform .15s;color:var(--faint);font-size:.8rem}
+.grp.shut .chev{transform:rotate(-90deg)}
+.grp h3{font-size:.95rem;font-weight:800}
+.grp h3.tg::before{content:"#";color:var(--accent);margin-right:2px}
+.grp .n{font-family:var(--mono);font-size:.72rem;color:var(--faint);border:1px solid var(--line);border-radius:20px;padding:1px 9px}
+.fld .tagsug{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.fld .tagsug button{font-family:var(--mono);font-size:.74rem;color:var(--mute);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
+.fld .tagsug button:hover{color:var(--accent);border-color:var(--accent)}
+.fld .tagsug button.on{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.favrow{display:flex;align-items:center;gap:10px;font-size:.92rem;cursor:pointer;user-select:none}
+.favrow input{width:18px;height:18px;accent-color:var(--warn)}
+
 /* ── Phone ─────────────────────────────────────────────── */
 @media(max-width:860px){
   body{overflow:hidden}
@@ -219,6 +250,8 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
   .two{grid-template-columns:1fr}
   .fld input,.fld select,.fld textarea{font-size:16px}
   .acts{opacity:1}
+  .frow{flex-direction:column;gap:4px}.frow .fl{flex:none;padding-top:0}
+  .frow .chips{flex-wrap:nowrap;overflow-x:auto}
   .grid.list .card{flex-direction:column}
   #toasts{bottom:calc(88px + var(--sab))}
 }
@@ -271,13 +304,24 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
         <option value="az">A → Z</option>
         <option value="cat">By category</option>
         <option value="new">Newest first</option>
+        <option value="upd">Recently updated</option>
+        <option value="fav">Favourites first</option>
+      </select>
+      <select class="sel" id="group" aria-label="Group by">
+        <option value="none">No grouping</option>
+        <option value="tag">Group: Tag</option>
+        <option value="category">Group: Category</option>
+        <option value="section">Group: Section</option>
       </select>
       <span class="seg" role="group" aria-label="Layout">
         <button id="vGrid" type="button" aria-label="Cards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
         <button id="vList" type="button" aria-label="List"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       </span>
     </div>
-    <div class="chips" id="cats" style="margin-bottom:14px"></div>
+    <div id="filters">
+      <div class="frow" id="rowCat" style="display:none"><span class="fl">Category</span><div class="chips" id="cats"></div></div>
+      <div class="frow" id="rowTag" style="display:none"><span class="fl">Tag</span><div class="chips" id="tags"></div></div>
+    </div>
     <div class="grid" id="grid"></div>
   </main>
 </div>
@@ -291,11 +335,13 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
     <div class="mb">
       <div class="two">
         <div class="fld"><label for="fTab">Section</label><select id="fTab"></select></div>
-        <div class="fld"><label for="fCat">Category</label><input id="fCat" list="catList" placeholder="e.g. Network, Files…"><datalist id="catList"></datalist></div>
+        <div class="fld"><label for="fCat">Category</label><input id="fCat" list="catList" placeholder="e.g. Windows, Cisco…"><datalist id="catList"></datalist></div>
       </div>
+      <div class="fld"><label for="fTag">Tags</label><input id="fTag" placeholder="Files &amp; Folders, Network"><div class="tagsug" id="tagSug"></div></div>
       <div class="fld"><label for="fCmd">Command <em>*</em></label><textarea id="fCmd" rows="2" placeholder="ipconfig /all" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea></div>
       <div class="fld"><label for="fPurpose">Purpose</label><textarea id="fPurpose" rows="2" style="font-family:var(--ui);font-size:.95rem" placeholder="What does it do?"></textarea></div>
       <div class="fld"><label for="fEx">Example</label><textarea id="fEx" rows="3" placeholder="ipconfig /all | findstr IPv4" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea><div class="hint">Tip: Ctrl/⌘ + Enter to save</div></div>
+      <label class="favrow"><input type="checkbox" id="fFav"> ⭐ Favourite me rakho</label>
       <div class="err-line" id="editErr"></div>
     </div>
     <div class="mf">
@@ -356,17 +402,17 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
 
 // ══ CONFIG ══════════════════════════════════════════════════════════════════
 // Paste your Apps Script Web app URL (ends with /exec) here to skip the first-run prompt.
-var GAS_URL = "https://script.google.com/macros/s/AKfycbwhSYw9SwyFLDTfNspgYxGaJJOPsXktRD3HwFYP8mtU_y_I9juFyKo3a9Nk3AUNf0o/exec";
+var GAS_URL = "";
 var POLL_MS = 15000;
 // ═════════════════════════════════════════════════════════════════════════════
 
-var LS = { url: "cmdn_url", cache: "cmdn_cache", tab: "cmdn_tab", theme: "cmdn_theme", key: "cmdn_key", view: "cmdn_view", sort: "cmdn_sort" };
+var LS = { url: "cmdn_url", cache: "cmdn_cache", tab: "cmdn_tab", theme: "cmdn_theme", key: "cmdn_key", view: "cmdn_view", sort: "cmdn_sort", group: "cmdn_group" };
 var $ = function (id) { return document.getElementById(id); };
 function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
 
-var S = { tabs: [], items: [], locked: false, sheetUrl: "", tab: "__all", cat: "", q: "", sort: "sheet", view: "grid",
+var S = { tabs: [], items: [], locked: false, sheetUrl: "", tab: "__all", cat: "", tag: "", group: "tag", shut: {}, warnings: [], q: "", sort: "sheet", view: "grid",
           loaded: false, lastSync: 0, sig: "", key: lsGet(LS.key) || "", busy: 0, queue: [], editing: null, delItem: null, offline: false };
 
 /* ───────────── helpers ───────────── */
@@ -384,6 +430,20 @@ function hl(text, q) {
     last = m.index + m[0].length;
   }
   return out + esc(text.slice(last));
+}
+function dv(v) { v = String(v == null ? "" : v).trim(); return v === "—" || v === "-" ? "" : v; }
+function tagsOf(it) {
+  var seen = {}, out = [];
+  dv(it.tag).split(/[,;|]/).forEach(function (x) { x = x.trim(); var k = x.toLowerCase(); if (x && !seen[k]) { seen[k] = 1; out.push(x); } });
+  return out;
+}
+function hasTag(it, t) { t = t.toLowerCase(); return tagsOf(it).some(function (x) { return x.toLowerCase() === t; }); }
+function when(it) {
+  var iso = it.updated_at || it.created_at; if (!iso) return "";
+  var ms = Date.parse(iso); if (isNaN(ms)) return "";
+  var s = Math.max(0, Math.round((Date.now() - ms) / 1000));
+  var txt = s < 60 ? "just now" : s < 3600 ? Math.round(s / 60) + "m ago" : s < 86400 ? Math.round(s / 3600) + "h ago" : s < 86400 * 30 ? Math.round(s / 86400) + "d ago" : new Date(ms).toLocaleDateString();
+  return (it.updated_at ? "updated " : "added ") + txt;
 }
 function hue(s) { var h = 0; s = String(s || "x").toLowerCase(); for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360; return h; }
 function tabIcon(n) {
@@ -434,15 +494,15 @@ function friendly(e) {
 
 /* ───────────── state ↔ storage ───────────── */
 function applyData(d, fromCache) {
-  var sig = JSON.stringify([d.tabs, d.items]);
-  S.locked = !!d.locked; S.sheetUrl = d.sheetUrl || S.sheetUrl;
+  var sig = JSON.stringify([d.tabs, d.items, d.warnings]);
+  S.locked = !!d.locked; S.sheetUrl = d.sheetUrl || S.sheetUrl; S.warnings = d.warnings || [];
   var changed = sig !== S.sig;
   S.sig = sig; S.tabs = d.tabs || []; S.items = d.items || []; S.loaded = true;
   if (!fromCache) { S.lastSync = d.ts || Date.now(); }
-  if (S.tab !== "__all" && !S.tabs.some(function (t) { return t.name === S.tab; })) S.tab = "__all";
+  if (S.tab !== "__all" && S.tab !== "__fav" && !S.tabs.some(function (t) { return t.name === S.tab; })) S.tab = "__all";
   return changed;
 }
-function saveCache() { lsSet(LS.cache, JSON.stringify({ tabs: S.tabs, items: S.items, locked: S.locked, sheetUrl: S.sheetUrl, ts: S.lastSync })); }
+function saveCache() { lsSet(LS.cache, JSON.stringify({ tabs: S.tabs, items: S.items, locked: S.locked, sheetUrl: S.sheetUrl, warnings: S.warnings, ts: S.lastSync })); }
 
 /* ───────────── sync ───────────── */
 var syncing = false, syncAgain = false;
@@ -457,6 +517,7 @@ function sync(silent) {
   syncing = true; refreshLive();
   return api("list").then(function (d) {
     S.offline = false; hideBanner();
+    if (d.warnings && d.warnings.length) showBanner("warn", "⚠️ " + d.warnings[0] + (d.warnings.length > 1 ? "  (+" + (d.warnings.length - 1) + " aur)" : ""), false);
     if (S.busy) return;                         // a write is in flight; its own sync will follow
     var changed = applyData(d, false);
     saveCache();
@@ -488,7 +549,7 @@ function enqueue(job) {
 }
 S.queue = Promise.resolve();
 function canEdit() { if (S.offline || navigator.onLine === false) { toast("Offline — add/edit internet aane par hoga", "bad"); return false; } if (S.locked && !S.key) { openKey(); return false; } return true; }
-function pick(it) { return { cmd: it.cmd, category: it.category, purpose: it.purpose, example: it.example }; }
+function pick(it) { return { cmd: it.cmd, tag: it.tag || "", category: it.category || "", purpose: it.purpose || "", example: it.example || "" }; }
 
 /* ───────────── render ───────────── */
 function counts() { var c = {}; S.items.forEach(function (i) { c[i.tab] = (c[i.tab] || 0) + 1; }); return c; }
@@ -500,63 +561,99 @@ function renderTabs() {
     mob += '<button class="chip' + on + '" data-tab="' + esc(name) + '">' + icon + " " + esc(label) + " <b>" + n + "</b></button>";
   }
   btn("__all", "All commands", "⌘", total);
+  btn("__fav", "Favourites", "⭐", S.items.filter(function (i) { return i.favorite; }).length);
   S.tabs.forEach(function (t) { btn(t.name, t.name.replace(/_/g, " "), tabIcon(t.name), c[t.name] || 0); });
   $("sideTabs").innerHTML = html; $("mobTabs").innerHTML = mob;
   var onChip = $("mobTabs").querySelector(".on"); if (onChip && onChip.scrollIntoView) { try { onChip.scrollIntoView({ inline: "center", block: "nearest" }); } catch (e) {} }
 }
-function visibleBase() { return S.items.filter(function (i) { return S.tab === "__all" || i.tab === S.tab; }); }
+function visibleBase() { return S.items.filter(function (i) { return S.tab === "__all" || (S.tab === "__fav" ? i.favorite : i.tab === S.tab); }); }
 function renderCats() {
-  var base = visibleBase(), m = {};
-  base.forEach(function (i) { var k = (i.category || "").trim(); if (k) m[k] = (m[k] || 0) + 1; });
-  var names = Object.keys(m).sort(function (a, b) { return a.localeCompare(b); });
-  if (S.cat && !m[S.cat]) S.cat = "";
-  var h = names.length > 1 ? '<button class="chip' + (S.cat ? "" : " on") + '" data-cat="">All</button>' : "";
-  if (names.length > 1) names.forEach(function (n) { h += '<button class="chip' + (S.cat === n ? " on" : "") + '" data-cat="' + esc(n) + '">' + esc(n) + " · " + m[n] + "</button>"; });
-  $("cats").innerHTML = h; $("cats").style.display = h ? "" : "none";
+  var base = visibleBase(), cm = {}, tm = {}, tcase = {};
+  base.forEach(function (i) {
+    var k = dv(i.category).trim(); if (k) cm[k] = (cm[k] || 0) + 1;
+    tagsOf(i).forEach(function (x) { var l = x.toLowerCase(); tm[l] = (tm[l] || 0) + 1; tcase[l] = tcase[l] || x; });
+  });
+  var cn = Object.keys(cm).sort(function (a, b) { return a.localeCompare(b); });
+  var tn = Object.keys(tm).sort(function (a, b) { return a.localeCompare(b); });
+  if (S.cat && !cm[S.cat]) S.cat = "";
+  if (S.tag && !tm[S.tag.toLowerCase()]) S.tag = "";
+  var h = "";
+  if (cn.length > 1 || S.cat) { h = '<button class="chip' + (S.cat ? "" : " on") + '" data-cat="">All</button>'; cn.forEach(function (n) { h += '<button class="chip' + (S.cat === n ? " on" : "") + '" data-cat="' + esc(n) + '">' + esc(n) + " · " + cm[n] + "</button>"; }); }
+  $("cats").innerHTML = h; $("rowCat").style.display = h ? "" : "none";
+  var g = "";
+  if (tn.length > 1 || S.tag) { g = '<button class="chip' + (S.tag ? "" : " on") + '" data-tag="">All</button>'; tn.forEach(function (l) { g += '<button class="chip tg' + (S.tag && S.tag.toLowerCase() === l ? " on" : "") + '" data-tag="' + esc(tcase[l]) + '">' + esc(tcase[l]) + " · " + tm[l] + "</button>"; }); }
+  $("tags").innerHTML = g; $("rowTag").style.display = g ? "" : "none";
 }
 function filtered() {
   var q = S.q.trim().toLowerCase(), terms = q ? q.split(/\s+/) : [];
   var list = visibleBase().filter(function (i) {
     if (S.cat && (i.category || "").trim() !== S.cat) return false;
+    if (S.tag && !hasTag(i, S.tag)) return false;
     if (!terms.length) return true;
-    var hay = (i.cmd + " " + i.category + " " + i.purpose + " " + i.example + " " + i.tab).toLowerCase();
+    var hay = (i.cmd + " " + i.category + " " + i.tag + " " + i.purpose + " " + i.example + " " + i.tab).toLowerCase();
     return terms.every(function (t) { return hay.indexOf(t) >= 0; });
   });
   if (S.sort === "az") list.sort(function (a, b) { return a.cmd.localeCompare(b.cmd); });
   else if (S.sort === "cat") list.sort(function (a, b) { return (a.category || "~").localeCompare(b.category || "~") || a.cmd.localeCompare(b.cmd); });
-  else if (S.sort === "new") list.sort(function (a, b) { return (b.tmp ? 1e9 : 0) + (b.row || 0) - ((a.tmp ? 1e9 : 0) + (a.row || 0)); });
+  else if (S.sort === "new") list.sort(function (a, b) { return (b.tmp ? 1 : 0) - (a.tmp ? 1 : 0) || String(b.created_at || "").localeCompare(String(a.created_at || "")) || (b.row || 0) - (a.row || 0); });
+  else if (S.sort === "upd") list.sort(function (a, b) { return (b.tmp ? 1 : 0) - (a.tmp ? 1 : 0) || String(b.updated_at || b.created_at || "").localeCompare(String(a.updated_at || a.created_at || "")); });
+  else if (S.sort === "fav") list.sort(function (a, b) { return (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0); });
   return list;
 }
 function card(i, idx) {
-  var q = S.q.trim();
-  return '<article class="card' + (i.tmp ? " pending" : "") + '" data-i="' + idx + '" style="--h:' + hue(i.category || i.tab) + ';animation-delay:' + Math.min(idx, 12) * 18 + 'ms">' +
-    '<header>' + (i.category ? '<span class="badge">' + hl(i.category, q) + "</span>" : "") +
-    (S.tab === "__all" ? '<span class="tagtab">' + esc(i.tab) + "</span>" : "") +
-    '<div class="acts"><button data-act="edit" aria-label="Edit" title="Edit">' + ICON.edit + '</button><button class="del" data-act="del" aria-label="Delete" title="Delete">' + ICON.del + "</button></div></header>" +
+  var q = S.q.trim(), cat = dv(i.category), ex = dv(i.example), pu = dv(i.purpose), tg = tagsOf(i), w = when(i);
+  return '<article class="card' + (i.tmp ? " pending" : "") + (i.favorite ? " isfav" : "") + '" data-i="' + idx + '" style="--h:' + hue(cat || i.tab) + ';animation-delay:' + Math.min(idx, 12) * 18 + 'ms">' +
+    '<header>' + (cat ? '<span class="badge" data-act="fcat" data-v="' + esc(cat) + '" title="Is category ke commands">' + hl(cat, q) + "</span>" : "") +
+    (S.tab === "__all" || S.tab === "__fav" ? '<span class="tagtab">' + esc(i.tab) + "</span>" : "") +
+    '<div class="acts"><button class="star' + (i.favorite ? " on" : "") + '" data-act="fav" aria-label="Favourite" title="Favourite">' + (i.favorite ? "★" : "☆") + '</button>' +
+    '<button data-act="edit" aria-label="Edit" title="Edit">' + ICON.edit + '</button><button class="del" data-act="del" aria-label="Delete" title="Delete">' + ICON.del + "</button></div></header>" +
     '<div class="cmd" data-act="copy-cmd" title="Click to copy"><pre>' + hl(i.cmd, q) + '</pre><span class="cp">' + ICON.copy + "</span></div>" +
-    (i.purpose ? '<p class="purpose">' + hl(i.purpose, q) + "</p>" : "") +
-    (i.example ? '<div class="ex"><span class="lbl">Example</span><div class="body" data-act="copy-ex" title="Click to copy"><pre>' + hl(i.example, q) + '</pre><span class="cp">' + ICON.copy + "</span></div></div>" : "") +
+    (pu ? '<p class="purpose">' + hl(pu, q) + "</p>" : "") +
+    (ex ? '<div class="ex"><span class="lbl">Example</span><div class="body" data-act="copy-ex" title="Click to copy"><pre>' + hl(ex, q) + '</pre><span class="cp">' + ICON.copy + "</span></div></div>" : "") +
+    ((tg.length || w) ? '<div class="cardfoot"><div class="tags">' + tg.map(function (x) { return '<span class="tgp" data-act="ftag" data-v="' + esc(x) + '" title="Is tag ke commands">' + hl(x, q) + "</span>"; }).join("") + '</div>' +
+      (w ? '<span class="when" title="' + esc(i.updated_at || i.created_at) + '">' + esc(w) + "</span>" : "") + "</div>" : "") +
     "</article>";
 }
 var shown = [];
+function groupKeys(it) {
+  if (S.group === "tag") { var tg = tagsOf(it); return tg.length ? tg : ["Untagged"]; }
+  if (S.group === "category") return [dv(it.category) || "Uncategorized"];
+  return [it.tab];
+}
 function renderGrid() {
   var g = $("grid");
   g.className = "grid" + (S.view === "list" ? " list" : "");
   if (!S.loaded && S.failed) { g.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="big">📡</div><h3>Data load nahi hua</h3><p>Upar ka message dekho, phir Retry dabao.</p></div>'; $("count").textContent = ""; return; }
   if (!S.loaded) { g.innerHTML = '<div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>'; $("count").textContent = ""; return; }
-  shown = filtered();
-  $("count").textContent = shown.length + (shown.length === 1 ? " item" : " items");
-  if (!shown.length) {
+  var list = filtered();
+  $("count").textContent = list.length + (list.length === 1 ? " item" : " items");
+  if (!list.length) {
+    shown = [];
     var any = S.items.length > 0;
     g.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="big">' + (any ? "🔍" : "📝") + "</div><h3>" + (any ? "Kuch nahi mila" : "Abhi koi command nahi") + "</h3><p>" +
       (any ? "Search ya filter badal ke dekho." : "＋ Add dabao aur apni pehli command save karo.") + "</p></div>";
     return;
   }
-  g.innerHTML = shown.map(card).join("");
+  shown = [];
+  if (S.group === "none") { shown = list; g.innerHTML = list.map(card).join(""); return; }
+  var groups = {}, order = [];
+  list.forEach(function (it) { groupKeys(it).forEach(function (k) { var l = k.toLowerCase(); if (!groups[l]) { groups[l] = { name: k, items: [] }; order.push(l); } groups[l].items.push(it); }); });
+  order.sort(function (a, b) {
+    var ea = /^(untagged|uncategorized)$/.test(a), eb = /^(untagged|uncategorized)$/.test(b);
+    return ea !== eb ? (ea ? 1 : -1) : groups[a].name.localeCompare(groups[b].name);
+  });
+  var html = "";
+  order.forEach(function (l) {
+    var gr = groups[l], key = S.group + ":" + l, shut = !!S.shut[key];
+    html += '<div class="grp' + (shut ? " shut" : "") + '" data-grp="' + esc(key) + '"><span class="chev">▼</span><h3' + (S.group === "tag" && l !== "untagged" ? ' class="tg"' : "") + ">" + esc(gr.name) + '</h3><span class="n">' + gr.items.length + "</span></div>";
+    if (!shut) gr.items.forEach(function (it) { shown.push(it); html += card(it, shown.length - 1); });
+  });
+  g.innerHTML = html;
 }
 function renderTitle() {
-  $("title").firstChild.nodeValue = (S.tab === "__all" ? "All commands" : S.tab.replace(/_/g, " ")) + " ";
-  document.title = (S.tab === "__all" ? "" : S.tab.replace(/_/g, " ") + " · ") + "CMD Notes";
+  var nm = S.tab === "__all" ? "All commands" : S.tab === "__fav" ? "⭐ Favourites" : S.tab.replace(/_/g, " ");
+  $("title").firstChild.nodeValue = nm + " ";
+  document.title = (S.tab === "__all" ? "" : nm + " · ") + "CMD Notes";
 }
 function renderSide() {
   $("sheetLink").style.display = S.sheetUrl ? "" : "none"; if (S.sheetUrl) $("sheetLink").href = S.sheetUrl;
@@ -567,16 +664,21 @@ function renderSide() {
 function renderAll() { renderTabs(); renderCats(); renderTitle(); renderSide(); renderGrid(); }
 
 /* ───────────── interactions ───────────── */
-function setTab(name) { S.tab = name; S.cat = ""; lsSet(LS.tab, name); renderAll(); $("main").scrollTo({ top: 0 }); }
+function setTab(name) { S.tab = name; S.cat = ""; S.tag = ""; lsSet(LS.tab, name); renderAll(); $("main").scrollTo({ top: 0 }); }
 document.addEventListener("click", function (e) {
   var t = e.target.closest("[data-tab]"); if (t && (t.closest("#sideTabs") || t.closest("#mobTabs"))) return setTab(t.getAttribute("data-tab"));
   var c = e.target.closest("[data-cat]"); if (c && c.closest("#cats")) { S.cat = c.getAttribute("data-cat"); renderCats(); renderGrid(); return; }
+  var tg = e.target.closest("[data-tag]"); if (tg && tg.closest("#tags")) { S.tag = tg.getAttribute("data-tag"); renderCats(); renderGrid(); return; }
+  var gh = e.target.closest("[data-grp]"); if (gh) { var gk = gh.getAttribute("data-grp"); S.shut[gk] = !S.shut[gk]; renderGrid(); return; }
   var cl = e.target.closest("[data-close]"); if (cl) return closeAll();
   if (e.target.classList && e.target.classList.contains("ov")) return closeAll();
   var a = e.target.closest("[data-act]"); if (!a) return;
   var art = a.closest(".card"); if (!art) return;
   var it = shown[+art.getAttribute("data-i")]; if (!it) return;
   var act = a.getAttribute("data-act");
+  if (act === "fcat") { S.cat = a.getAttribute("data-v"); renderCats(); renderGrid(); return; }
+  if (act === "ftag") { S.tag = a.getAttribute("data-v"); renderCats(); renderGrid(); return; }
+  if (act === "fav") return toggleFav(it);
   if (act === "edit") return openEdit(it);
   if (act === "del") return askDelete(it);
   if (act === "copy-cmd") return copy(it.cmd, a);
@@ -597,11 +699,19 @@ var qEl = $("q");
 qEl.addEventListener("input", function () { S.q = qEl.value; $("searchBox").classList.toggle("has", !!S.q); renderGrid(); });
 $("qClr").onclick = function () { qEl.value = ""; S.q = ""; $("searchBox").classList.remove("has"); renderGrid(); qEl.focus(); };
 $("sort").onchange = function () { S.sort = this.value; lsSet(LS.sort, S.sort); renderGrid(); };
+$("group").onchange = function () { S.group = this.value; lsSet(LS.group, S.group); renderGrid(); };
 $("vGrid").onclick = function () { S.view = "grid"; lsSet(LS.view, "grid"); renderSide(); renderGrid(); };
 $("vList").onclick = function () { S.view = "list"; lsSet(LS.view, "list"); renderSide(); renderGrid(); };
 $("themeBtn").onclick = function () { setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark"); };
 function setTheme(t) { document.documentElement.setAttribute("data-theme", t); lsSet(LS.theme, t); var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t === "dark" ? "#0b1114" : "#f2f5f6"; }
 
+function toggleFav(it) {
+  if (!canEdit()) return;
+  if (it.tmp) return toast("Save ho raha hai… thodi der ruko");
+  it.favorite = !it.favorite; renderAll();
+  var orig = pick(it), id = it.id, row = it.row, tab = it.tab, f = it.favorite;
+  enqueue(function () { return api("favorite", { tab: tab, id: id, row: row, orig: orig, favorite: f }).then(function () { toast(f ? "⭐ Favourite" : "Favourite hata diya", "ok", 1400); }); });
+}
 /* ── modals ── */
 function openOv(id) { $(id).classList.add("show"); }
 function closeAll() { document.querySelectorAll(".ov.show").forEach(function (o) { o.classList.remove("show"); }); S.editing = null; S.delItem = null; if ($("setup").style.display === "flex" && gasUrl()) $("setup").style.display = "none"; }
@@ -609,6 +719,21 @@ function fillTabSelect(sel) {
   $("fTab").innerHTML = S.tabs.map(function (t) { return '<option value="' + esc(t.name) + '">' + esc(t.name.replace(/_/g, " ")) + "</option>"; }).join("");
   if (sel) $("fTab").value = sel;
 }
+function tagSugRender(tab) {
+  var cnt = {}, cs = {};
+  S.items.forEach(function (i) { tagsOf(i).forEach(function (x) { var l = x.toLowerCase(); cnt[l] = (cnt[l] || 0) + (!tab || i.tab === tab ? 2 : 1); cs[l] = cs[l] || x; }); });
+  var cur = tagsOf({ tag: $("fTag").value }).map(function (x) { return x.toLowerCase(); });
+  var names = Object.keys(cnt).sort(function (a, b) { return cnt[b] - cnt[a] || a.localeCompare(b); }).slice(0, 14);
+  $("tagSug").innerHTML = names.map(function (l) { return '<button type="button" class="' + (cur.indexOf(l) >= 0 ? "on" : "") + '" data-sug="' + esc(cs[l]) + '">' + esc(cs[l]) + "</button>"; }).join("");
+}
+$("tagSug").addEventListener("click", function (e) {
+  var b = e.target.closest("[data-sug]"); if (!b) return;
+  var v = b.getAttribute("data-sug"), list = tagsOf({ tag: $("fTag").value }), l = v.toLowerCase();
+  var idx = list.findIndex(function (x) { return x.toLowerCase() === l; });
+  if (idx >= 0) list.splice(idx, 1); else list.push(v);
+  $("fTag").value = list.join(", "); tagSugRender($("fTab").value);
+});
+$("fTag").addEventListener("input", function () { tagSugRender($("fTab").value); });
 function fillCatList(tab) {
   var m = {}; S.items.forEach(function (i) { if (!tab || i.tab === tab) { var k = (i.category || "").trim(); if (k) m[k] = 1; } });
   $("catList").innerHTML = Object.keys(m).sort().map(function (k) { return '<option value="' + esc(k) + '">'; }).join("");
@@ -618,9 +743,9 @@ function openAdd() {
   if (!S.tabs.length) return toast("Pehle sheet load hone do ya naya section banao", "bad");
   S.editing = null;
   $("editTitle").textContent = "New command"; $("delBtn").style.display = "none"; $("fTab").disabled = false;
-  fillTabSelect(S.tab !== "__all" ? S.tab : (lsGet(LS.tab) && S.tabs.some(function (t) { return t.name === lsGet(LS.tab); }) ? lsGet(LS.tab) : S.tabs[0].name));
+  fillTabSelect(S.tab !== "__all" && S.tab !== "__fav" ? S.tab : (lsGet(LS.tab) && S.tabs.some(function (t) { return t.name === lsGet(LS.tab); }) ? lsGet(LS.tab) : S.tabs[0].name));
   fillCatList($("fTab").value);
-  $("fCmd").value = ""; $("fCat").value = S.cat || ""; $("fPurpose").value = ""; $("fEx").value = ""; $("editErr").style.display = "none";
+  $("fCmd").value = ""; $("fCat").value = S.cat || ""; $("fTag").value = S.tag || ""; $("fPurpose").value = ""; $("fEx").value = ""; $("fFav").checked = S.tab === "__fav"; $("editErr").style.display = "none"; tagSugRender($("fTab").value);
   openOv("editOv"); setTimeout(function () { $("fCmd").focus(); }, 60);
 }
 function openEdit(it) {
@@ -629,23 +754,23 @@ function openEdit(it) {
   S.editing = it;
   $("editTitle").textContent = "Edit command"; $("delBtn").style.display = ""; fillTabSelect(it.tab); $("fTab").disabled = true;
   fillCatList(it.tab);
-  $("fCmd").value = it.cmd; $("fCat").value = it.category; $("fPurpose").value = it.purpose; $("fEx").value = it.example; $("editErr").style.display = "none";
+  $("fCmd").value = it.cmd; $("fCat").value = dv(it.category); $("fTag").value = tagsOf(it).join(", "); $("fPurpose").value = dv(it.purpose); $("fEx").value = dv(it.example); $("fFav").checked = !!it.favorite; $("editErr").style.display = "none"; tagSugRender(it.tab);
   openOv("editOv"); setTimeout(function () { $("fCmd").focus(); }, 60);
 }
-$("fTab").onchange = function () { fillCatList(this.value); };
+$("fTab").onchange = function () { fillCatList(this.value); tagSugRender(this.value); };
 $("fab").onclick = openAdd; $("addTop").onclick = openAdd;
 $("editForm").addEventListener("submit", function (e) {
   e.preventDefault();
-  var d = { cmd: $("fCmd").value, category: $("fCat").value, purpose: $("fPurpose").value, example: $("fEx").value };
+  var d = { cmd: $("fCmd").value, category: $("fCat").value, tag: tagsOf({ tag: $("fTag").value }).join(", "), purpose: $("fPurpose").value, example: $("fEx").value, favorite: $("fFav").checked };
   if (!d.cmd.trim()) { var er = $("editErr"); er.textContent = "Command likhna zaroori hai."; er.style.display = "block"; $("fCmd").focus(); return; }
   var tab = $("fTab").value, it = S.editing;
   closeAll();
   if (it) {
-    var orig = pick(it), row = it.row;
-    Object.assign(it, d, { tmp: true }); renderGrid();
-    enqueue(function () { return api("update", Object.assign({ tab: it.tab, row: row, orig: orig }, d)).then(function () { toast("Saved ✓", "ok"); }); });
+    var orig = pick(it), row = it.row, id = it.id;
+    Object.assign(it, d, { tmp: true, updated_at: new Date().toISOString() }); renderAll();
+    enqueue(function () { return api("update", Object.assign({ tab: it.tab, row: row, id: id, orig: orig }, d)).then(function () { toast("Saved ✓", "ok"); }); });
   } else {
-    S.items.push(Object.assign({ tab: tab, row: 0, tmp: true }, d)); renderAll();
+    S.items.push(Object.assign({ tab: tab, row: 0, id: "", tmp: true, created_at: new Date().toISOString(), updated_at: "" }, d)); renderAll();
     enqueue(function () { return api("add", Object.assign({ tab: tab }, d)).then(function () { toast("Added ✓", "ok"); }); });
   }
 });
@@ -659,7 +784,7 @@ function askDelete(it) {
 $("confYes").onclick = function () {
   var it = S.delItem; closeAll(); if (!it) return;
   S.items = S.items.filter(function (x) { return x !== it; }); renderAll();
-  enqueue(function () { return api("delete", { tab: it.tab, row: it.row, orig: pick(it) }).then(function () { toast("Deleted", "ok"); }); });
+  enqueue(function () { return api("delete", { tab: it.tab, row: it.row, id: it.id, orig: pick(it) }).then(function () { toast("Deleted", "ok"); }); });
 };
 /* new tab */
 $("newTabBtn").onclick = function () { if (!canEdit()) return; $("tName").value = ""; $("tabErr").style.display = "none"; openOv("tabOv"); setTimeout(function () { $("tName").focus(); }, 60); };
@@ -743,6 +868,7 @@ if (params.get("setup") === "1") { lsDel(LS.url); }
 
 setTheme(lsGet(LS.theme) || (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"));
 S.sort = lsGet(LS.sort) || "sheet"; $("sort").value = S.sort; S.view = lsGet(LS.view) || "grid";
+S.group = lsGet(LS.group) || "tag"; $("group").value = S.group;
 S.tab = lsGet(LS.tab) || "__all";
 
 (function loadCache() {
