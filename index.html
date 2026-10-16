@@ -103,11 +103,8 @@ main{overflow-y:auto;padding:18px 22px calc(110px + var(--sab));scroll-behavior:
 .bar h2 small{font-family:var(--mono);font-size:.78rem;font-weight:600;color:var(--faint)}
 .bar .sp{flex:1}
 select.sel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.82rem;color:var(--mute);outline:none}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
-.seg button{padding:7px 11px;color:var(--faint)}.seg button.on{background:var(--accent-soft);color:var(--accent)}
-.seg svg{width:16px;height:16px;display:block}
 
-/* ── Table view ────────────────────────────────────────── */
+/* ── Table ─────────────────────────────────────────────── */
 #grid{display:block}
 .skel{height:190px;border-radius:16px;background:linear-gradient(90deg,var(--panel) 25%,var(--panel2) 50%,var(--panel) 75%);background-size:200% 100%;animation:sh 1.3s infinite;border:1px solid var(--line);margin-bottom:12px}
 @keyframes sh{to{background-position:-200% 0}}
@@ -204,7 +201,6 @@ select.sel{background:var(--panel);border:1px solid var(--line);border-radius:10
 .frow .chips{flex:1;flex-wrap:wrap;overflow:visible}
 .chip.tg::before{content:"#";opacity:.55;margin-right:2px}
 .chip.on.tg::before{opacity:.8}
-.chip.fav.on{background:var(--warn);border-color:var(--warn);color:#2a1d00}
 
 /* ── Empty / banner ────────────────────────────────────── */
 .empty{text-align:center;padding:70px 20px;color:var(--mute)}
@@ -239,12 +235,63 @@ select.sel{background:var(--panel);border:1px solid var(--line);border-radius:10
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .err-line{color:var(--danger);font-size:.82rem;font-weight:600;display:none}
 .mf .sp{flex:1}
-.fld .tagsug{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.fld .tagsug button{font-family:var(--mono);font-size:.74rem;color:var(--mute);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
-.fld .tagsug button:hover{color:var(--accent);border-color:var(--accent)}
-.fld .tagsug button.on{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
 .favrow{display:flex;align-items:center;gap:10px;font-size:.92rem;cursor:pointer;user-select:none}
 .favrow input{width:18px;height:18px;accent-color:var(--warn)}
+
+/* ── Combobox / tag chips ──────────────────────────────── */
+.combo{position:relative}
+.combo > select{
+  width:100%;background:var(--bg);border:1px solid var(--line);border-radius:11px;
+  padding:11px 34px 11px 13px;font-size:.95rem;outline:none;transition:.15s;
+  appearance:none;-webkit-appearance:none;cursor:pointer;
+}
+.combo > select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.combo::after{
+  content:"▾";position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  color:var(--mute);font-size:.8rem;pointer-events:none;
+}
+
+.tagbox{
+  background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:8px 10px;
+  transition:.15s;min-height:46px;cursor:text;
+}
+.tagbox:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.tagbox .chips-in{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.tagbox .chips-in:empty{margin-bottom:0;display:none}
+.tagchip{
+  display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.74rem;
+  color:var(--accent-ink);background:var(--accent);border-radius:6px;padding:3px 6px 3px 9px;
+  user-select:none;white-space:nowrap;
+}
+.tagchip::before{content:"#";opacity:.7}
+.tagchip button{
+  background:transparent;border:0;color:inherit;cursor:pointer;opacity:.75;
+  padding:0 2px;font-size:.86rem;line-height:1;border-radius:3px;
+}
+.tagchip button:hover{opacity:1;background:rgba(0,0,0,.15)}
+.tagbox input{
+  width:100%;background:transparent;border:0;outline:none;
+  padding:6px 4px;font-size:.92rem;color:var(--text);
+}
+.tagbox input::placeholder{color:var(--faint)}
+.tagsug{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;
+  max-height:120px;overflow-y:auto;padding-right:2px;
+}
+.tagsug:empty{display:none}
+.tagsug button{
+  font-family:var(--mono);font-size:.74rem;color:var(--mute);
+  border:1px solid var(--line);border-radius:6px;padding:3px 9px;
+  transition:.12s;background:var(--panel);
+}
+.tagsug button::before{content:"#";opacity:.55;margin-right:1px}
+.tagsug button:hover{color:var(--accent);border-color:var(--accent)}
+.tagsug button.on{background:var(--accent-soft);color:var(--accent);border-color:var(--accent);cursor:default}
+.tagsug .lbl{
+  flex:0 0 100%;font-size:.62rem;font-weight:800;letter-spacing:1px;
+  text-transform:uppercase;color:var(--faint);margin-bottom:2px;
+}
+
 .cmd{display:flex;align-items:flex-start;gap:10px;background:var(--code);border:1px solid var(--line);border-radius:11px;padding:10px 10px 10px 12px}
 .cmd pre{flex:1;min-width:0;font-family:var(--mono);font-size:.88rem;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:var(--text)}
 .cmd pre::before{content:"›  ";color:var(--accent);font-weight:800}
@@ -296,7 +343,6 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
   .frow .chips{flex-wrap:nowrap;overflow-x:auto}
   #toasts{bottom:calc(88px + var(--sab))}
 
-  /* Table → stacked cards */
   .tbl{font-size:.85rem;table-layout:auto}
   .tbl thead{display:none}
   .tbl, .tbl tbody, .tbl tr, .tbl td{display:block;width:100%}
@@ -307,7 +353,7 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
   }
   .tbl tbody tr:nth-child(even){background:var(--panel)}
   .tbl td{border:0;padding:4px 0}
-  .tbl td.c-cmd{padding-top:0;padding-right:60px}
+  .tbl td.c-cmd{padding-top:0;padding-right:100px}
   .tbl td.c-cmd code{font-size:.92rem;font-weight:600}
   .tbl td.c-use{color:var(--mute)}
   .tbl td.c-use::before{content:"Use: ";color:var(--faint);font-weight:700}
@@ -322,7 +368,7 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
 }
 @media(max-width:380px){.brand b{font-size:.92rem}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-@media print{aside,header.top,.fab,.acts,.mobtabs,.bar .seg{display:none!important}body{overflow:visible;background:#fff;color:#000}main{overflow:visible}
+@media print{aside,header.top,.fab,.acts,.mobtabs{display:none!important}body{overflow:visible;background:#fff;color:#000}main{overflow:visible}
   .tbl thead th{background:#e3ebf0!important;color:#2b3e48!important}}
 </style>
 </head>
@@ -396,10 +442,27 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
     <div class="mh"><h3 id="editTitle">New command</h3><button type="button" class="ibtn" data-close aria-label="Close">✕</button></div>
     <div class="mb">
       <div class="two">
-        <div class="fld"><label for="fTab">Section</label><select id="fTab"></select></div>
-        <div class="fld"><label for="fCat">Category</label><input id="fCat" list="catList" placeholder="e.g. Windows, Cisco…"><datalist id="catList"></datalist></div>
+        <div class="fld">
+          <label for="fTab">Section</label>
+          <div class="combo"><select id="fTab"></select></div>
+        </div>
+        <div class="fld">
+          <label for="fCat">Category</label>
+          <div class="combo"><select id="fCat"></select></div>
+        </div>
       </div>
-      <div class="fld"><label for="fTag">Tags</label><input id="fTag" placeholder="Files &amp; Folders, Network"><div class="tagsug" id="tagSug"></div></div>
+
+      <div class="fld">
+        <label for="fTagInput">Tags</label>
+        <div class="tagbox" id="tagBox">
+          <div class="chips-in" id="tagChips"></div>
+          <input id="fTagInput" type="text" placeholder="Type &amp; press Enter to add a new tag…"
+                 autocomplete="off" spellcheck="false" autocapitalize="off" autocorrect="off">
+        </div>
+        <div class="tagsug" id="tagSug"></div>
+        <div class="hint">Existing tag pe click karo ya naya type karke Enter dabao. Backspace se last tag hat jaata hai.</div>
+      </div>
+
       <div class="fld"><label for="fCmd">Command <em>*</em></label><textarea id="fCmd" rows="2" placeholder="ipconfig /all" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea></div>
       <div class="fld"><label for="fPurpose">Purpose</label><textarea id="fPurpose" rows="2" style="font-family:var(--ui);font-size:.95rem" placeholder="What does it do?"></textarea></div>
       <div class="fld"><label for="fEx">Example</label><textarea id="fEx" rows="3" placeholder="ipconfig /all | findstr IPv4" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea><div class="hint">Tip: Ctrl/⌘ + Enter to save</div></div>
@@ -428,7 +491,7 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
 <div class="ov" id="tabOv" role="dialog" aria-modal="true">
   <form class="modal" id="tabForm" style="max-width:420px" autocomplete="off">
     <div class="mh"><h3>New section</h3><button type="button" class="ibtn" data-close aria-label="Close">✕</button></div>
-    <div class="mb"><div class="fld"><label for="tName">Tab name</label><input id="tName" maxlength="60" placeholder="e.g. Docker"><div class="hint">Google Sheet me naya tab (cmds, tag, category, purpose, example, id, favorite, created_at, updated_at columns ke saath) ban jayega.</div></div><div class="err-line" id="tabErr"></div></div>
+    <div class="mb"><div class="fld"><label for="tName">Tab name</label><input id="tName" maxlength="60" placeholder="e.g. Docker"><div class="hint">Google Sheet me naya tab ban jayega (same 9 columns: cmds, tag, category, purpose, example, id, favorite, created_at, updated_at).</div></div><div class="err-line" id="tabErr"></div></div>
     <div class="mf"><span class="sp"></span><button class="btn ghost" data-close type="button">Cancel</button><button class="btn primary" type="submit">Create</button></div>
   </form>
 </div>
@@ -468,14 +531,15 @@ var GAS_URL = "";
 var POLL_MS = 15000;
 // ═════════════════════════════════════════════════════════════════════════════
 
-var LS = { url:"cmdn_url", cache:"cmdn_cache", tab:"cmdn_tab", theme:"cmdn_theme", key:"cmdn_key", view:"cmdn_view", sort:"cmdn_sort", group:"cmdn_group" };
+var LS = { url:"cmdn_url", cache:"cmdn_cache", tab:"cmdn_tab", theme:"cmdn_theme", key:"cmdn_key", sort:"cmdn_sort", group:"cmdn_group" };
 var $ = function (id) { return document.getElementById(id); };
 function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
 
-var S = { tabs: [], items: [], locked: false, sheetUrl: "", tab: "__all", cat: "", tag: "", group: "tag", shut: {}, warnings: [], q: "", sort: "sheet", view: "grid",
-          loaded: false, lastSync: 0, sig: "", key: lsGet(LS.key) || "", busy: 0, queue: [], editing: null, delItem: null, offline: false, failed: false };
+var S = { tabs: [], items: [], locked: false, sheetUrl: "", tab: "__all", cat: "", tag: "", group: "tag", shut: {}, warnings: [], q: "", sort: "sheet",
+          loaded: false, lastSync: 0, sig: "", key: lsGet(LS.key) || "", busy: 0, queue: Promise.resolve(), editing: null, delItem: null, offline: false, failed: false,
+          _tags: [] };
 
 /* ───────────── helpers ───────────── */
 function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (m) { return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]; }); }
@@ -496,7 +560,7 @@ function hl(text, q) {
 function dv(v) { v = String(v == null ? "" : v).trim(); return v === "—" || v === "-" ? "" : v; }
 function tagsOf(it) {
   var seen = {}, out = [];
-  dv(it.tag).split(/[,;|]/).forEach(function (x) { x = x.trim(); var k = x.toLowerCase(); if (x && !seen[k]) { seen[k] = 1; out.push(x); } });
+  dv(it.tag).split(/[,;|]/).forEach(function (x) { x = x.trim().replace(/^#/, ""); var k = x.toLowerCase(); if (x && !seen[k]) { seen[k] = 1; out.push(x); } });
   return out;
 }
 function hasTag(it, t) { t = t.toLowerCase(); return tagsOf(it).some(function (x) { return x.toLowerCase() === t; }); }
@@ -756,7 +820,6 @@ function renderGrid() {
     });
   }
   g.innerHTML = '<div class="tbl-wrap"><table class="tbl">' + head + '<tbody>' + body + '</tbody></table></div>';
-  // reflect sort state in header
   var k = S.sort.replace(/-asc$|-desc$/, "");
   document.querySelectorAll(".tbl thead th[data-sort]").forEach(function (el) {
     var on = el.getAttribute("data-sort") === k && ["cmd","use","ex"].indexOf(k) >= 0;
@@ -773,7 +836,6 @@ function renderTitle() {
 function renderSide() {
   $("sheetLink").style.display = S.sheetUrl ? "" : "none"; if (S.sheetUrl) $("sheetLink").href = S.sheetUrl;
   $("lockBtn").style.display = S.locked && !S.key ? "" : "none";
-  $("fab").disabled = false; $("addTop").disabled = false;
 }
 function renderAll() { renderTabs(); renderCats(); renderTitle(); renderSide(); renderGrid(); }
 
@@ -781,7 +843,7 @@ function renderAll() { renderTabs(); renderCats(); renderTitle(); renderSide(); 
 function setTab(name) { S.tab = name; S.cat = ""; S.tag = ""; lsSet(LS.tab, name); renderAll(); $("main").scrollTo({ top: 0 }); }
 document.addEventListener("click", function (e) {
 
-  // Table column sort (must be first — th is not inside .card / .tabbtn)
+  // Table column sort
   var th = e.target.closest(".tbl thead th[data-sort]");
   if (th) {
     var k = th.getAttribute("data-sort"), cur = S.sort;
@@ -843,56 +905,187 @@ function toggleFav(it) {
   var orig = pick(it), id = it.id, row = it.row, tab = it.tab, f = it.favorite;
   enqueue(function () { return api("favorite", { tab: tab, id: id, row: row, orig: orig, favorite: f }).then(function () { toast(f ? "⭐ Favourite" : "Favourite hata diya", "ok", 1400); }); });
 }
+
 /* ── modals ── */
 function openOv(id) { $(id).classList.add("show"); }
 function closeAll() { document.querySelectorAll(".ov.show").forEach(function (o) { o.classList.remove("show"); }); S.editing = null; S.delItem = null; if ($("setup").style.display === "flex" && gasUrl()) $("setup").style.display = "none"; }
+
+/* ── Section dropdown ── */
 function fillTabSelect(sel) {
   $("fTab").innerHTML = S.tabs.map(function (t) { return '<option value="' + esc(t.name) + '">' + esc(t.name.replace(/_/g, " ")) + "</option>"; }).join("");
   if (sel) $("fTab").value = sel;
 }
-function tagSugRender(tab) {
+
+/* ── Category dropdown (single-select combobox) ── */
+function fillCategorySelect(current) {
+  var sel = $("fCat");
+  var seen = {}, cats = [];
+  S.items.forEach(function (i) {
+    var k = (i.category || "").trim();
+    if (k && !seen[k]) { seen[k] = 1; cats.push(k); }
+  });
+  cats.sort(function (a, b) { return a.localeCompare(b); });
+  if (current && !seen[current]) cats.push(current);
+
+  var html = '<option value="">— Choose category —</option>';
+  cats.forEach(function (c) {
+    html += '<option value="' + esc(c) + '"' + (c === current ? ' selected' : '') + '>' + esc(c) + '</option>';
+  });
+  html += '<option value="__new__">＋ Create new category…</option>';
+  sel.innerHTML = html;
+  if (!current) sel.value = "";
+}
+$("fCat").onchange = function () {
+  if (this.value === "__new__") {
+    var n = prompt("New category name:");
+    if (n && n.trim()) {
+      var v = n.trim();
+      var opt = document.createElement("option");
+      opt.value = v; opt.textContent = v;
+      this.insertBefore(opt, this.lastElementChild);
+      this.value = v;
+    } else {
+      this.value = "";
+    }
+  }
+};
+
+/* ── Tag combobox: chips + suggestions + free text ── */
+function renderTagChips() {
+  var box = $("tagChips");
+  if (!S._tags.length) { box.innerHTML = ""; return; }
+  box.innerHTML = S._tags.map(function (t, i) {
+    return '<span class="tagchip">' + esc(t) +
+           '<button type="button" data-tag-rm="' + i + '" aria-label="Remove tag">✕</button></span>';
+  }).join("");
+}
+function addTag(raw) {
+  var t = String(raw || "").trim().replace(/^#/, "");
+  if (!t) return;
+  var exists = S._tags.some(function (x) { return x.toLowerCase() === t.toLowerCase(); });
+  if (exists) { $("fTagInput").value = ""; return; }
+  if (t.length > 40) t = t.slice(0, 40);
+  S._tags.push(t);
+  renderTagChips();
+  renderTagSuggestions();
+  $("fTagInput").value = "";
+}
+function removeTag(i) {
+  S._tags.splice(i, 1);
+  renderTagChips();
+  renderTagSuggestions();
+}
+function renderTagSuggestions() {
   var cnt = {}, cs = {};
-  S.items.forEach(function (i) { tagsOf(i).forEach(function (x) { var l = x.toLowerCase(); cnt[l] = (cnt[l] || 0) + (!tab || i.tab === tab ? 2 : 1); cs[l] = cs[l] || x; }); });
-  var cur = tagsOf({ tag: $("fTag").value }).map(function (x) { return x.toLowerCase(); });
-  var names = Object.keys(cnt).sort(function (a, b) { return cnt[b] - cnt[a] || a.localeCompare(b); }).slice(0, 14);
-  $("tagSug").innerHTML = names.map(function (l) { return '<button type="button" class="' + (cur.indexOf(l) >= 0 ? "on" : "") + '" data-sug="' + esc(cs[l]) + '">' + esc(cs[l]) + "</button>"; }).join("");
+  S.items.forEach(function (i) {
+    tagsOf(i).forEach(function (x) {
+      var l = x.toLowerCase();
+      cnt[l] = (cnt[l] || 0) + 1;
+      cs[l] = cs[l] || x;
+    });
+  });
+  var sorted = Object.keys(cnt).sort(function (a, b) { return cnt[b] - cnt[a] || a.localeCompare(b); });
+  var q = ($("fTagInput").value || "").toLowerCase().replace(/^#/, "");
+  if (q) sorted = sorted.filter(function (l) { return l.indexOf(q) >= 0; });
+
+  var used = {};
+  S._tags.forEach(function (t) { used[t.toLowerCase()] = 1; });
+
+  var html = "";
+  if (sorted.length) {
+    html += '<span class="lbl">Suggested</span>';
+    sorted.slice(0, 20).forEach(function (l) {
+      var on = used[l] ? " on" : "";
+      html += '<button type="button" class="' + on.trim() + '" data-tag-add="' + esc(cs[l]) + '">' + esc(cs[l]) + '</button>';
+    });
+  }
+  if (q && !cnt[q]) {
+    html = '<span class="lbl">Create new</span>' +
+           '<button type="button" data-tag-add="' + esc(q) + '">' + esc(q) + '</button>' + html;
+  }
+  $("tagSug").innerHTML = html;
 }
-$("tagSug").addEventListener("click", function (e) {
-  var b = e.target.closest("[data-sug]"); if (!b) return;
-  var v = b.getAttribute("data-sug"), list = tagsOf({ tag: $("fTag").value }), l = v.toLowerCase();
-  var idx = list.findIndex(function (x) { return x.toLowerCase() === l; });
-  if (idx >= 0) list.splice(idx, 1); else list.push(v);
-  $("fTag").value = list.join(", "); tagSugRender($("fTab").value);
+$("tagChips").addEventListener("click", function (e) {
+  var b = e.target.closest("[data-tag-rm]");
+  if (b) { removeTag(+b.getAttribute("data-tag-rm")); }
 });
-$("fTag").addEventListener("input", function () { tagSugRender($("fTab").value); });
-function fillCatList(tab) {
-  var m = {}; S.items.forEach(function (i) { if (!tab || i.tab === tab) { var k = (i.category || "").trim(); if (k) m[k] = 1; } });
-  $("catList").innerHTML = Object.keys(m).sort().map(function (k) { return '<option value="' + esc(k) + '">'; }).join("");
-}
+$("tagSug").addEventListener("click", function (e) {
+  var b = e.target.closest("[data-tag-add]");
+  if (!b || b.classList.contains("on")) return;
+  addTag(b.getAttribute("data-tag-add"));
+});
+$("fTagInput").addEventListener("keydown", function (e) {
+  if (e.key === "Enter" || e.key === "," || e.key === ";") {
+    e.preventDefault();
+    if (this.value.trim()) addTag(this.value);
+  } else if (e.key === "Backspace" && !this.value && S._tags.length) {
+    removeTag(S._tags.length - 1);
+  }
+});
+$("fTagInput").addEventListener("input", renderTagSuggestions);
+$("fTagInput").addEventListener("focus", renderTagSuggestions);
+$("tagBox").addEventListener("click", function (e) {
+  if (e.target.id === "tagBox" || e.target.classList.contains("chips-in")) $("fTagInput").focus();
+});
+
+/* ── Open add / edit ── */
 function openAdd() {
   if (!canEdit()) return;
   if (!S.tabs.length) return toast("Pehle sheet load hone do ya naya section banao", "bad");
   S.editing = null;
-  $("editTitle").textContent = "New command"; $("delBtn").style.display = "none"; $("fTab").disabled = false;
+  S._tags = S.tag ? [S.tag] : [];
+  $("editTitle").textContent = "New command";
+  $("delBtn").style.display = "none";
+  $("fTab").disabled = false;
   fillTabSelect(S.tab !== "__all" && S.tab !== "__fav" ? S.tab : (lsGet(LS.tab) && S.tabs.some(function (t) { return t.name === lsGet(LS.tab); }) ? lsGet(LS.tab) : S.tabs[0].name));
-  fillCatList($("fTab").value);
-  $("fCmd").value = ""; $("fCat").value = S.cat || ""; $("fTag").value = S.tag || ""; $("fPurpose").value = ""; $("fEx").value = ""; $("fFav").checked = S.tab === "__fav"; $("editErr").style.display = "none"; tagSugRender($("fTab").value);
-  openOv("editOv"); setTimeout(function () { $("fCmd").focus(); }, 60);
+  fillCategorySelect(S.cat || "");
+  $("fCmd").value = "";
+  $("fPurpose").value = "";
+  $("fEx").value = "";
+  $("fTagInput").value = "";
+  $("fFav").checked = S.tab === "__fav";
+  $("editErr").style.display = "none";
+  renderTagChips();
+  renderTagSuggestions();
+  openOv("editOv");
+  setTimeout(function () { $("fCmd").focus(); }, 60);
 }
 function openEdit(it) {
   if (!canEdit()) return;
   if (it.tmp) return toast("Save ho raha hai… thodi der ruko");
   S.editing = it;
-  $("editTitle").textContent = "Edit command"; $("delBtn").style.display = ""; fillTabSelect(it.tab); $("fTab").disabled = true;
-  fillCatList(it.tab);
-  $("fCmd").value = it.cmd; $("fCat").value = dv(it.category); $("fTag").value = tagsOf(it).join(", "); $("fPurpose").value = dv(it.purpose); $("fEx").value = dv(it.example); $("fFav").checked = !!it.favorite; $("editErr").style.display = "none"; tagSugRender(it.tab);
-  openOv("editOv"); setTimeout(function () { $("fCmd").focus(); }, 60);
+  S._tags = tagsOf(it).slice();
+  $("editTitle").textContent = "Edit command";
+  $("delBtn").style.display = "";
+  fillTabSelect(it.tab);
+  $("fTab").disabled = true;
+  fillCategorySelect(dv(it.category));
+  $("fCmd").value = it.cmd;
+  $("fPurpose").value = dv(it.purpose);
+  $("fEx").value = dv(it.example);
+  $("fTagInput").value = "";
+  $("fFav").checked = !!it.favorite;
+  $("editErr").style.display = "none";
+  renderTagChips();
+  renderTagSuggestions();
+  openOv("editOv");
+  setTimeout(function () { $("fCmd").focus(); }, 60);
 }
-$("fTab").onchange = function () { fillCatList(this.value); tagSugRender(this.value); };
+$("fTab").onchange = function () { renderTagSuggestions(); };
 $("fab").onclick = openAdd; $("addTop").onclick = openAdd;
+
 $("editForm").addEventListener("submit", function (e) {
   e.preventDefault();
-  var d = { cmd: $("fCmd").value, category: $("fCat").value, tag: tagsOf({ tag: $("fTag").value }).join(", "), purpose: $("fPurpose").value, example: $("fEx").value, favorite: $("fFav").checked };
+  var catVal = $("fCat").value;
+  if (catVal === "__new__") catVal = "";
+  var d = {
+    cmd: $("fCmd").value,
+    category: catVal,
+    tag: S._tags.join(", "),
+    purpose: $("fPurpose").value,
+    example: $("fEx").value,
+    favorite: $("fFav").checked
+  };
   if (!d.cmd.trim()) { var er = $("editErr"); er.textContent = "Command likhna zaroori hai."; er.style.display = "block"; $("fCmd").focus(); return; }
   var tab = $("fTab").value, it = S.editing;
   closeAll();
@@ -906,6 +1099,7 @@ $("editForm").addEventListener("submit", function (e) {
   }
 });
 $("editForm").addEventListener("keydown", function (e) { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); $("editForm").requestSubmit(); } });
+
 $("delBtn").onclick = function () { var it = S.editing; closeAll(); if (it) askDelete(it); };
 function askDelete(it) {
   if (!canEdit()) return;
@@ -917,11 +1111,13 @@ $("confYes").onclick = function () {
   S.items = S.items.filter(function (x) { return x !== it; }); renderAll();
   enqueue(function () { return api("delete", { tab: it.tab, row: it.row, id: it.id, orig: pick(it) }).then(function () { toast("Deleted", "ok"); }); });
 };
+
 $("newTabBtn").onclick = function () { if (!canEdit()) return; $("tName").value = ""; $("tabErr").style.display = "none"; openOv("tabOv"); setTimeout(function () { $("tName").focus(); }, 60); };
 $("tabForm").addEventListener("submit", function (e) {
   e.preventDefault(); var n = $("tName").value.trim(); if (!n) return;
   closeAll(); enqueue(function () { return api("addTab", { name: n }).then(function () { S.tab = n; lsSet(LS.tab, n); toast("Section ban gaya ✓", "ok"); }); });
 });
+
 function openKey() { $("kIn").value = ""; $("keyErr").style.display = "none"; openOv("keyOv"); setTimeout(function () { $("kIn").focus(); }, 60); }
 $("lockBtn").onclick = openKey;
 $("keyForm").addEventListener("submit", function (e) {
@@ -930,6 +1126,7 @@ $("keyForm").addEventListener("submit", function (e) {
   api("checkKey", { key: k }).then(function (r) { if (r.ok) { lsSet(LS.key, k); closeAll(); renderSide(); toast("Unlocked ✓", "ok"); } else { S.key = ""; $("keyErr").textContent = "Password galat hai."; $("keyErr").style.display = "block"; } })
     .catch(function (er) { S.key = ""; $("keyErr").textContent = friendly(er); $("keyErr").style.display = "block"; });
 });
+
 function showSetup(cancelable) { $("sUrl").value = gasUrl(); $("sErr").style.display = "none"; $("sCancel").style.display = cancelable ? "" : "none"; $("setup").style.display = "flex"; }
 $("setupBtn").onclick = function () { showSetup(true); };
 $("sCancel").onclick = function () { $("setup").style.display = "none"; };
@@ -939,6 +1136,7 @@ $("setupForm").addEventListener("submit", function (e) {
   if (!validUrl(v)) { $("sErr").textContent = "https://script.google.com/…/exec wala URL daalo."; $("sErr").style.display = "block"; return; }
   lsSet(LS.url, v); lsDel(LS.cache); location.reload();
 });
+
 document.addEventListener("keydown", function (e) {
   var typing = /input|textarea|select/i.test((e.target.tagName || ""));
   if (e.key === "Escape") { if (document.querySelector(".ov.show")) closeAll(); else if (S.q) $("qClr").click(); return; }
@@ -947,7 +1145,7 @@ document.addEventListener("keydown", function (e) {
   else if (e.key === "n") { e.preventDefault(); openAdd(); }
 });
 
-/* ───────────── PWA: install, SW, URL params ───────────── */
+/* ───────────── PWA ───────────── */
 function isStandalone() {
   return window.matchMedia("(display-mode: standalone)").matches || window.matchMedia("(display-mode: minimal-ui)").matches || window.navigator.standalone === true;
 }
