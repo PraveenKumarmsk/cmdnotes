@@ -12,7 +12,7 @@
 //   • Non-GET requests              → bypass (never cached)
 // ════════════════════════════════════════════════════════════════════════════
 
-const VERSION       = 'cmdnotes-v2.0.1';
+const VERSION       = 'cmdnotes-v2.0.2';
 const CACHE_SHELL   = VERSION + '-shell';
 const CACHE_RUNTIME = VERSION + '-runtime';
 const CACHE_IMAGES  = VERSION + '-images';
