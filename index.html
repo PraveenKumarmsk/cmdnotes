@@ -260,6 +260,18 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
 .fsel select{flex:1;min-width:0}
 .fbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
 .fbar .clr{font-size:.8rem;font-weight:700;color:var(--accent);padding:6px 4px}
+/* ── Combo dropdowns ───────────────────────────────────── */
+.combo{position:relative}
+.combo input{width:100%;padding-right:38px}
+.combo .cbtn{position:absolute;right:4px;top:4px;bottom:4px;width:32px;border-radius:8px;color:var(--mute);font-size:.9rem}
+.combo .cbtn:hover{background:var(--accent-soft);color:var(--accent)}
+.cpanel{display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:60;max-height:220px;overflow-y:auto;background:var(--panel2,var(--panel));border:1px solid var(--line2,var(--line));border-radius:10px;box-shadow:var(--shadow);padding:4px}
+.combo.open .cpanel{display:block}
+.cpanel .opt{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;cursor:pointer;font-size:.9rem}
+.cpanel .opt:hover,.cpanel .opt.sel{background:var(--accent-soft)}
+.cpanel .opt .ck{width:16px;color:var(--accent);font-weight:800}
+.cpanel .opt .n{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--faint)}
+.cpanel .none{padding:10px;color:var(--faint);font-size:.85rem}
 /* ── Phone ─────────────────────────────────────────────── */
 @media(max-width:860px){
   body{overflow:hidden}
@@ -382,9 +394,9 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
     <div class="mb">
       <div class="two">
         <div class="fld"><label for="fTab">Section</label><select id="fTab"></select></div>
-        <div class="fld"><label for="fCat">Category</label><input id="fCat" list="catList" placeholder="e.g. Windows, Cisco…"><datalist id="catList"></datalist></div>
+        <div class="fld"><label for="fCat">Category</label><div class="combo" data-for="fCat"><input id="fCat" autocomplete="off" placeholder="Windows, Linux, Cisco…"><button type="button" class="cbtn" tabindex="-1" aria-label="Category list">▾</button><div class="cpanel"></div></div></div>
       </div>
-      <div class="fld"><label for="fTag">Tags</label><input id="fTag" placeholder="Files &amp; Folders, Network"><div class="tagsug" id="tagSug"></div></div>
+      <div class="fld"><label for="fTag">Tags</label><div class="combo" data-for="fTag" data-multi="1"><input id="fTag" autocomplete="off" placeholder="Files &amp; Folders, Network"><button type="button" class="cbtn" tabindex="-1" aria-label="Tag list">▾</button><div class="cpanel"></div></div><div class="tagsug" id="tagSug"></div></div>
       <div class="fld"><label for="fCmd">Command <em>*</em></label><textarea id="fCmd" rows="2" placeholder="ipconfig /all" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea></div>
       <div class="fld"><label for="fPurpose">Purpose</label><textarea id="fPurpose" rows="2" style="font-family:var(--ui);font-size:.95rem" placeholder="What does it do?"></textarea></div>
       <div class="fld"><label for="fEx">Example</label><textarea id="fEx" rows="3" placeholder="ipconfig /all | findstr IPv4" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea><div class="hint">Tip: Ctrl/⌘ + Enter to save</div></div>
@@ -542,7 +554,7 @@ function friendly(e) {
 /* ───────────── state ↔ storage ───────────── */
 function applyData(d, fromCache) {
   var sig = JSON.stringify([d.tabs, d.items, d.warnings]);
-  S.locked = !!d.locked; S.sheetUrl = d.sheetUrl || S.sheetUrl; S.warnings = d.warnings || [];
+  S.locked = !!d.locked; S.sheetUrl = d.sheetUrl || S.sheetUrl; S.warnings = d.warnings || []; S.stale = !d.v;
   var changed = sig !== S.sig;
   S.sig = sig; S.tabs = d.tabs || []; S.items = d.items || []; S.loaded = true;
   if (!fromCache) { S.lastSync = d.ts || Date.now(); }
@@ -564,7 +576,8 @@ function sync(silent) {
   syncing = true; refreshLive();
   return api("list").then(function (d) {
     S.offline = false; hideBanner();
-    if (d.warnings && d.warnings.length) showBanner("warn", "⚠️ " + d.warnings[0] + (d.warnings.length > 1 ? "  (+" + (d.warnings.length - 1) + " aur)" : ""), false);
+    if (S.stale) showBanner("warn", "⚠️ Apps Script ka Code.gs purana hai (tag/section nahi dikhenge). Naya Code.gs paste karo → Deploy → Manage deployments → ✏️ → New version → Deploy.", false);
+    else if (d.warnings && d.warnings.length) showBanner("warn", "⚠️ " + d.warnings[0] + (d.warnings.length > 1 ? "  (+" + (d.warnings.length - 1) + " aur)" : ""), false);
     if (S.busy) return;                         // a write is in flight; its own sync will follow
     var changed = applyData(d, false);
     saveCache();
@@ -806,10 +819,46 @@ $("tagSug").addEventListener("click", function (e) {
   $("fTag").value = list.join(", "); tagSugRender($("fTab").value);
 });
 $("fTag").addEventListener("input", function () { tagSugRender($("fTab").value); });
-function fillCatList(tab) {
-  var m = {}; S.items.forEach(function (i) { if (!tab || i.tab === tab) { var k = (i.category || "").trim(); if (k) m[k] = 1; } });
-  $("catList").innerHTML = Object.keys(m).sort().map(function (k) { return '<option value="' + esc(k) + '">'; }).join("");
+function fillCatList() {}
+var DEF_CATS = ["Windows", "Linux", "Cisco"], DEF_TAGS = ["Files & Folders", "Network", "System", "Services", "Users", "Security", "Storage", "Troubleshooting"];
+function comboOptions(id) {
+  var cnt = {}, cs = {}, add = function (x, n) { x = dv(x).trim(); if (!x) return; var l = x.toLowerCase(); cnt[l] = (cnt[l] || 0) + n; cs[l] = cs[l] || x; };
+  if (id === "fCat") { DEF_CATS.forEach(function (x) { add(x, 0); }); S.tabs.forEach(function (tb) { add(tb.name.replace(/_/g, " "), 0); }); S.items.forEach(function (i) { add(i.category, 1); }); }
+  else { DEF_TAGS.forEach(function (x) { add(x, 0); }); S.items.forEach(function (i) { tagsOf(i).forEach(function (x) { add(x, 1); }); }); }
+  return Object.keys(cnt).sort(function (a, b) { return cs[a].localeCompare(cs[b]); }).map(function (l) { return { name: cs[l], n: cnt[l] }; });
 }
+function comboRender(cb) {
+  var id = cb.getAttribute("data-for"), inp = $(id), multi = !!cb.getAttribute("data-multi"), panel = cb.querySelector(".cpanel");
+  var picked = multi ? tagsOf({ tag: inp.value }).map(function (x) { return x.toLowerCase(); }) : [];
+  var q = (multi ? inp.value.split(/[,;|]/).pop() : inp.value).trim().toLowerCase();
+  var opts = comboOptions(id).filter(function (o) { return !q || o.name.toLowerCase().indexOf(q) >= 0 || picked.indexOf(o.name.toLowerCase()) >= 0; });
+  panel.innerHTML = opts.length ? opts.map(function (o) {
+    var on = multi ? picked.indexOf(o.name.toLowerCase()) >= 0 : inp.value.trim().toLowerCase() === o.name.toLowerCase();
+    return '<div class="opt' + (on ? " sel" : "") + '" data-v="' + esc(o.name) + '"><span class="ck">' + (on ? "✓" : "") + "</span>" + esc(o.name) + (o.n ? '<span class="n">' + o.n + "</span>" : "") + "</div>";
+  }).join("") : '<div class="none">Kuch nahi — naya naam type karo</div>';
+}
+function comboOpen(cb, yes) {
+  document.querySelectorAll(".combo.open").forEach(function (c) { if (c !== cb) c.classList.remove("open"); });
+  if (yes) { comboRender(cb); cb.classList.add("open"); } else cb.classList.remove("open");
+}
+document.querySelectorAll(".combo").forEach(function (cb) {
+  var inp = cb.querySelector("input"), multi = !!cb.getAttribute("data-multi");
+  inp.addEventListener("focus", function () { comboOpen(cb, true); });
+  inp.addEventListener("click", function () { comboOpen(cb, true); });
+  inp.addEventListener("input", function () { comboOpen(cb, true); if (multi) tagSugRender($("fTab").value); });
+  inp.addEventListener("keydown", function (e) { if (e.key === "Escape" && cb.classList.contains("open")) { e.stopPropagation(); comboOpen(cb, false); } });
+  cb.querySelector(".cbtn").addEventListener("click", function () { var o = cb.classList.contains("open"); comboOpen(cb, !o); if (!o) inp.focus(); });
+  cb.querySelector(".cpanel").addEventListener("mousedown", function (e) {
+    e._inCombo = true; var o = e.target.closest(".opt"); if (!o) return; e.preventDefault();
+    var v = o.getAttribute("data-v");
+    if (multi) {
+      var list = tagsOf({ tag: inp.value }), l = v.toLowerCase(), ix = list.findIndex(function (x) { return x.toLowerCase() === l; });
+      if (ix >= 0) list.splice(ix, 1); else list.push(v);
+      inp.value = list.length ? list.join(", ") + ", " : ""; comboRender(cb); tagSugRender($("fTab").value);
+    } else { inp.value = v; comboOpen(cb, false); }
+  });
+});
+document.addEventListener("mousedown", function (e) { if (!e._inCombo && !e.target.closest(".combo")) document.querySelectorAll(".combo.open").forEach(function (c) { c.classList.remove("open"); }); });
 function openAdd() {
   if (!canEdit()) return;
   if (!S.tabs.length) return toast("Pehle sheet load hone do ya naya section banao", "bad");
