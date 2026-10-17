@@ -41,7 +41,7 @@ input,select,textarea{font:inherit;color:var(--text)}
 ::selection{background:var(--accent);color:var(--accent-ink)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-/* ── Shell ─────────────────────────────────────────────── */
+/* ── Shell — poora layout ─────────────────────────────────────────────── */
 #app{display:grid;grid-template-columns:260px 1fr;grid-template-rows:auto 1fr;height:100%;
   padding-left:var(--sal);padding-right:var(--sar)}
 header.top{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:calc(10px + var(--sat)) 18px 10px;
@@ -90,7 +90,7 @@ aside h6{font-size:.68rem;font-weight:800;letter-spacing:1px;text-transform:uppe
 .side-foot a,.side-foot button{font-size:.82rem;color:var(--mute);text-decoration:none;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;text-align:left}
 .side-foot a:hover,.side-foot button:hover{background:var(--panel);color:var(--text)}
 
-/* ── Main ──────────────────────────────────────────────── */
+/* ── Main area ──────────────────────────────────────────────── */
 main{overflow-y:auto;padding:18px 22px calc(110px + var(--sab));scroll-behavior:smooth}
 .chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
 .chips::-webkit-scrollbar{display:none}
@@ -156,7 +156,7 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
 .fab:hover{transform:translateY(-2px)}.fab svg{width:20px;height:20px}
 .fab:disabled{background:var(--panel2);color:var(--faint);box-shadow:none}
 
-/* ── Modal / sheet ─────────────────────────────────────── */
+/* ── Modal / bottom sheet ─────────────────────────────────────── */
 .ov{position:fixed;inset:0;background:rgba(2,6,8,.62);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:100;display:none;align-items:center;justify-content:center;padding:18px}
 .ov.show{display:flex;animation:fade .15s}
 @keyframes fade{from{opacity:0}}
@@ -176,22 +176,22 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
 .err-line{color:var(--danger);font-size:.82rem;font-weight:600;display:none}
 .mf .sp{flex:1}
 
-/* ── Toasts ────────────────────────────────────────────── */
+/* ── Toast messages ────────────────────────────────────────────── */
 #toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + var(--sab));z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:calc(100% - 32px);max-width:440px}
 .toast{background:var(--panel2);border:1px solid var(--line2);color:var(--text);padding:11px 18px;border-radius:30px;font-size:.86rem;font-weight:600;box-shadow:var(--shadow);animation:in .2s;max-width:100%;text-align:center}
 .toast.ok{border-color:var(--accent)}.toast.bad{border-color:var(--danger);color:var(--danger)}
 
-/* ── iOS install helper ────────────────────────────────── */
+/* ── iOS install madad banner ────────────────────────────────── */
 #iosBanner{position:fixed;left:50%;bottom:calc(20px + var(--sab));transform:translate(-50%,160%);width:calc(100% - 32px);max-width:440px;z-index:300;background:var(--panel);border:1px solid var(--line2);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .35s cubic-bezier(.4,0,.2,1);display:none}
 #iosBanner.show{display:block;transform:translate(-50%,0)}
 #iosBanner b{display:block;margin-bottom:6px}#iosBanner p{font-size:.84rem;color:var(--mute);line-height:1.55;margin-bottom:12px}
 #iosBanner p strong{color:var(--accent)}#iosBanner .r{display:flex;justify-content:flex-end}
 
-/* ── Setup screen ──────────────────────────────────────── */
+/* ── Pehli baar ka setup screen ──────────────────────────────────────── */
 #setup{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
 #setup .modal{max-width:480px}
 
-/* ── Organise: filter rows, tags, groups, favourites ───── */
+/* ── Organise: filters, tags, groups aur favourites ───── */
 .frow{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
 .frow .fl{flex:0 0 66px;padding-top:8px;font-size:.64rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--faint)}
 .frow .chips{flex:1;flex-wrap:wrap;overflow:visible}
@@ -223,7 +223,7 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
 .favrow{display:flex;align-items:center;gap:10px;font-size:.92rem;cursor:pointer;user-select:none}
 .favrow input{width:18px;height:18px;accent-color:var(--warn)}
 
-/* ── Detail list ───────────────────────────────────────── */
+/* ── Detail list view ───────────────────────────────────────── */
 .grid.rows{display:flex;flex-direction:column;align-items:stretch;align-content:flex-start;gap:0;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .rhead,.rw .rsum{display:grid;grid-template-columns:30px minmax(160px,1.3fr) minmax(0,1.6fr) minmax(110px,.8fr) minmax(120px,.9fr) 22px;gap:12px;align-items:center;padding:10px 14px}
 .rhead{font-size:.64rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--faint);border-bottom:1px solid var(--line);background:var(--bg2,transparent);position:sticky;top:0;z-index:2}
@@ -260,7 +260,7 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
 .fsel select{flex:1;min-width:0}
 .fbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
 .fbar .clr{font-size:.8rem;font-weight:700;color:var(--accent);padding:6px 4px}
-/* ── Combo dropdowns ───────────────────────────────────── */
+/* ── Combo dropdown (category / tags) ───────────────────────────────────── */
 .combo{position:relative}
 .combo input{width:100%;padding-right:38px}
 .combo .cbtn{position:absolute;right:4px;top:4px;bottom:4px;width:32px;border-radius:8px;color:var(--mute);font-size:.9rem}
@@ -272,7 +272,7 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
 .cpanel .opt .ck{width:16px;color:var(--accent);font-weight:800}
 .cpanel .opt .n{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--faint)}
 .cpanel .none{padding:10px;color:var(--faint);font-size:.85rem}
-/* ── Lock screen / Security ────────────────────────────── */
+/* ── Lock screen aur Security ────────────────────────────── */
 #lock{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;padding:20px;background:var(--bg);overflow-y:auto}
 #lock.show{display:flex}
 .lockbox{width:100%;max-width:340px;display:flex;flex-direction:column;align-items:stretch;gap:12px;text-align:center}
@@ -295,14 +295,14 @@ body.ro .addtop,body.ro #fab,body.ro [data-act=edit],body.ro [data-act=del],body
 .sec-row:last-child{border-bottom:0}
 .sec-row .sl{font-size:.9rem}.sec-row .sl small{display:block;color:var(--faint);font-size:.74rem;margin-top:2px}
 .sec-row select{width:auto;min-width:130px}
-/* ── Phone menu (replaces hidden sidebar footer) ───────── */
+/* ── Phone menu (chhupe sidebar footer ki jagah) ───────── */
 #moreBtn{display:none}
 #moreMenu{position:fixed;right:12px;top:calc(58px + var(--sat,0px));z-index:80;min-width:230px;background:var(--panel);border:1px solid var(--line2,var(--line));border-radius:14px;box-shadow:var(--shadow);padding:6px;display:flex;flex-direction:column}
 #moreMenu[hidden]{display:none}
 #moreMenu button,#moreMenu a{display:flex;align-items:center;gap:10px;text-align:left;padding:12px 12px;border-radius:9px;font-size:.92rem;color:var(--text);text-decoration:none;min-height:44px}
 #moreMenu button[hidden]{display:none}
 #moreMenu button:hover,#moreMenu a:hover{background:var(--accent-soft)}
-/* ── Phone ─────────────────────────────────────────────── */
+/* ── Phone layout ─────────────────────────────────────────────── */
 @media(max-width:860px){
   body{overflow:hidden}
   #app{grid-template-columns:1fr;grid-template-rows:auto 1fr}
@@ -428,7 +428,7 @@ body.ro .addtop,body.ro #fab,body.ro [data-act=edit],body.ro [data-act=del],body
 
 <button class="fab" id="fab" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Add</span></button>
 
-<!-- Add / Edit -->
+<!-- Add / Edit form -->
 <div class="ov" id="editOv" role="dialog" aria-modal="true" aria-labelledby="editTitle">
   <form class="modal" id="editForm" autocomplete="off">
     <div class="mh"><h3 id="editTitle">New command</h3><button type="button" class="ibtn" data-close aria-label="Close">✕</button></div>
@@ -441,7 +441,7 @@ body.ro .addtop,body.ro #fab,body.ro [data-act=edit],body.ro [data-act=del],body
       <div class="fld"><label for="fCmd">Command <em>*</em></label><textarea id="fCmd" rows="2" placeholder="ipconfig /all" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea></div>
       <div class="fld"><label for="fPurpose">Purpose</label><textarea id="fPurpose" rows="2" style="font-family:var(--ui);font-size:.95rem" placeholder="What does it do?"></textarea></div>
       <div class="fld"><label for="fEx">Example</label><textarea id="fEx" rows="3" placeholder="ipconfig /all | findstr IPv4" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea><div class="hint">Tip: Ctrl/⌘ + Enter to save</div></div>
-      <label class="favrow"><input type="checkbox" id="fFav"> ⭐ Favourite me rakho</label>
+      <label class="favrow"><input type="checkbox" id="fFav"> ⭐ Mark as favourite</label>
       <div class="err-line" id="editErr"></div>
     </div>
     <div class="mf">
@@ -453,25 +453,25 @@ body.ro .addtop,body.ro #fab,body.ro [data-act=edit],body.ro [data-act=del],body
   </form>
 </div>
 
-<!-- Confirm delete -->
+<!-- Delete confirm -->
 <div class="ov" id="confOv" role="alertdialog" aria-modal="true">
   <div class="modal" style="max-width:420px">
     <div class="mh"><h3>Delete this command?</h3></div>
-    <div class="mb"><div class="cmd" style="cursor:default"><pre id="confCmd"></pre></div><p class="purpose">Ye Google Sheet se bhi hat jayega.</p></div>
+    <div class="mb"><div class="cmd" style="cursor:default"><pre id="confCmd"></pre></div><p class="purpose">This will also be removed from the Google Sheet.</p></div>
     <div class="mf"><span class="sp"></span><button class="btn ghost" data-close type="button">Cancel</button><button class="btn danger" id="confYes" type="button">Delete</button></div>
   </div>
 </div>
 
-<!-- New tab -->
+<!-- Naya tab -->
 <div class="ov" id="tabOv" role="dialog" aria-modal="true">
   <form class="modal" id="tabForm" style="max-width:420px" autocomplete="off">
     <div class="mh"><h3>New section</h3><button type="button" class="ibtn" data-close aria-label="Close">✕</button></div>
-    <div class="mb"><div class="fld"><label for="tName">Tab name</label><input id="tName" maxlength="60" placeholder="e.g. Docker"><div class="hint">Google Sheet me naya tab (cmds, category, purpose, example columns ke saath) ban jayega.</div></div><div class="err-line" id="tabErr"></div></div>
+    <div class="mb"><div class="fld"><label for="tName">Tab name</label><input id="tName" maxlength="60" placeholder="e.g. Docker"><div class="hint">A new tab with all the standard columns will be created in the Google Sheet.</div></div><div class="err-line" id="tabErr"></div></div>
     <div class="mf"><span class="sp"></span><button class="btn ghost" data-close type="button">Cancel</button><button class="btn primary" type="submit">Create</button></div>
   </form>
 </div>
 
-<!-- Unlock -->
+<!-- Unlock (edit password) -->
 <div class="ov" id="keyOv" role="dialog" aria-modal="true">
   <form class="modal" id="keyForm" style="max-width:400px" autocomplete="off">
     <div class="mh"><h3>🔒 Unlock editing</h3><button type="button" class="ibtn" data-close aria-label="Close">✕</button></div>
@@ -498,9 +498,9 @@ body.ro .addtop,body.ro #fab,body.ro [data-act=edit],body.ro [data-act=del],body
     </div>
     <div class="err-line" id="lkErr"></div>
     <button class="btn primary" type="submit" id="lkGo">Unlock</button>
-    <button class="btn ghost" type="button" id="lkBio" style="display:none">👆 Fingerprint se unlock</button>
-    <button class="btn ghost" type="button" id="lkBioNo" style="display:none">Abhi nahi</button>
-    <button class="linkbtn" type="button" id="lkSwitch" style="display:none">Alag user se login</button>
+    <button class="btn ghost" type="button" id="lkBio" style="display:none">👆 Unlock with fingerprint</button>
+    <button class="btn ghost" type="button" id="lkBioNo" style="display:none">Not now</button>
+    <button class="linkbtn" type="button" id="lkSwitch" style="display:none">Log in as a different user</button>
   </form>
 </div>
 
@@ -511,26 +511,26 @@ body.ro .addtop,body.ro #fab,body.ro [data-act=edit],body.ro [data-act=del],body
     <div class="mb">
       <div class="sec-row"><div class="sl">Logged in as <b id="secUser"></b><small id="secRole"></small></div><button class="btn ghost" id="secLock" type="button">🔒 Lock now</button></div>
       <div class="sec-row" id="secBioRow"><div class="sl">Fingerprint / face unlock<small id="secBioSt"></small></div><button class="btn ghost" id="secBio" type="button"></button></div>
-      <div class="sec-row"><div class="sl">Auto-lock<small>App background me jaane ke baad</small></div>
-        <select class="sel" id="secAuto"><option value="0">Turant</option><option value="1">1 minute</option><option value="5">5 minute</option><option value="15">15 minute</option><option value="-1">Kabhi nahi</option></select></div>
+      <div class="sec-row"><div class="sl">Auto-lock<small>After the app goes to the background</small></div>
+        <select class="sel" id="secAuto"><option value="0">Immediately</option><option value="1">1 minute</option><option value="5">5 minutes</option><option value="15">15 minutes</option><option value="-1">Never</option></select></div>
       <form id="pinForm" autocomplete="off" style="padding-top:12px">
-        <div class="fld"><label for="pOld">PIN badlo</label><input id="pOld" type="password" inputmode="numeric" maxlength="12" placeholder="Purana PIN"></div>
-        <div class="fld" style="margin-top:8px"><input id="pNew" type="password" inputmode="numeric" maxlength="8" placeholder="Naya PIN (4–8 digit)"></div>
-        <div class="fld" style="margin-top:8px"><input id="pNew2" type="password" inputmode="numeric" maxlength="8" placeholder="Naya PIN dobara"></div>
+        <div class="fld"><label for="pOld">Change PIN</label><input id="pOld" type="password" inputmode="numeric" maxlength="12" placeholder="Current PIN"></div>
+        <div class="fld" style="margin-top:8px"><input id="pNew" type="password" inputmode="numeric" maxlength="8" placeholder="New PIN (4–8 digits)"></div>
+        <div class="fld" style="margin-top:8px"><input id="pNew2" type="password" inputmode="numeric" maxlength="8" placeholder="Repeat new PIN"></div>
         <div class="err-line" id="pinErr" style="margin-top:8px"></div>
-        <button class="btn primary" type="submit" style="margin-top:10px">PIN save karo</button>
+        <button class="btn primary" type="submit" style="margin-top:10px">Save PIN</button>
       </form>
     </div>
     <div class="mf"><button class="btn ghost" id="secOut" type="button">🚪 Logout</button><span class="sp"></span><button class="btn ghost" data-close type="button">Close</button></div>
   </div>
 </div>
 
-<!-- First-run server URL -->
+<!-- Pehli baar server URL -->
 <div id="setup">
   <form class="modal" id="setupForm" autocomplete="off">
     <div class="mh"><h3>⚙️ Connect your Google Sheet</h3></div>
     <div class="mb">
-      <p class="purpose">Apps Script ka <b>Web app URL</b> paste karo (Deploy → Manage deployments → URL, <b>/exec</b> par khatam hota hai). Ye sirf is device me save hota hai.</p>
+      <p class="purpose">Paste your Apps Script <b>Web app URL</b> (Deploy → Manage deployments → URL; it ends with <b>/exec</b>). It is saved on this device only.</p>
       <div class="fld"><label for="sUrl">Web app URL</label><input id="sUrl" type="url" inputmode="url" placeholder="https://script.google.com/macros/s/…/exec"></div>
       <div class="err-line" id="sErr"></div>
     </div>
@@ -538,7 +538,7 @@ body.ro .addtop,body.ro #fab,body.ro [data-act=edit],body.ro [data-act=del],body
   </form>
 </div>
 
-<div id="iosBanner"><b>📲 Install CMD Notes</b><p>Safari me neeche <strong>Share ⎋</strong> dabao, phir <strong>Add to Home Screen ➕</strong> chuno.</p><div class="r"><button class="btn primary" id="iosOk" type="button">Got it</button></div></div>
+<div id="iosBanner"><b>📲 Install CMD Notes</b><p>In Safari tap <strong>Share ⎋</strong> at the bottom, then choose <strong>Add to Home Screen ➕</strong>.</p><div class="r"><button class="btn primary" id="iosOk" type="button">Got it</button></div></div>
 <div id="toasts" aria-live="polite"></div>
 
 <script>
@@ -546,7 +546,7 @@ body.ro .addtop,body.ro #fab,body.ro [data-act=edit],body.ro [data-act=del],body
 (function () {
 
 // ══ CONFIG ══════════════════════════════════════════════════════════════════
-// Paste your Apps Script Web app URL (ends with /exec) here to skip the first-run prompt.
+// Apps Script ka Web app URL (/exec par khatam) yahan paste karo, to pehli baar ka prompt skip ho jaayega.
 var GAS_URL = "";
 var POLL_MS = 15000;
 // ═════════════════════════════════════════════════════════════════════════════
@@ -560,7 +560,7 @@ function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
 var S = { openRows: {}, tabs: [], items: [], locked: false, sheetUrl: "", tab: "__all", cat: "", tag: "", group: "tag", shut: {}, warnings: [], q: "", sort: "sheet", view: "grid",
           loaded: false, lastSync: 0, sig: "", key: lsGet(LS.key) || "", busy: 0, queue: [], editing: null, delItem: null, offline: false };
 
-/* ───────────── helpers ───────────── */
+/* ───────────── helper functions ───────────── */
 function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (m) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]; }); }
 function reEsc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
 function hl(text, q) {
@@ -612,12 +612,12 @@ var ICON = {
   del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>'
 };
 
-/* ───────────── server ───────────── */
+/* ───────────── server se baat ───────────── */
 function gasUrl() { return (GAS_URL || lsGet(LS.url) || "").trim(); }
 function validUrl(v) { try { var u = new URL(v); return u.protocol === "https:" && u.hostname === "script.google.com" && /\/exec$/.test(u.pathname); } catch (e) { return false; } }
 function api(action, data) {
   var base = gasUrl();
-  if (!base) { showSetup(false); return Promise.reject(new Error("Server URL set nahi hai.")); }
+  if (!base) { showSetup(false); return Promise.reject(new Error("Server URL is not set.")); }
   if (navigator.onLine === false) return Promise.reject(new Error("OFFLINE"));
   var body = Object.assign({ action: action, key: S.key, token: AUTH.token }, data || {});
   return fetch(base, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body), redirect: "follow" })
@@ -630,17 +630,17 @@ function api(action, data) {
 }
 function friendly(e) {
   var m = (e && e.message) || String(e);
-  if (m === "OFFLINE") return "Offline ho — internet aane par try karo.";
-  if (m === "EDIT_KEY_REQUIRED") return "Editing locked hai — pehle password se unlock karo.";
-  if (m === "AUTH_REQUIRED") return "Login ka time khatam — PIN se dobara login karo.";
-  if (m === "READ_ONLY") return "Aapko sirf padhne ka access hai (viewer).";
-  if (m === "ADMIN_ONLY") return "Ye kaam sirf admin kar sakta hai.";
-  if (m === "BADREPLY") return "Server ka reply galat hai. Apps Script ko 'New version' deploy kiya? (Access: Anyone)";
-  if (/failed to fetch|networkerror|load failed/i.test(m)) return "Server tak nahi pahunch paya. Check: Apps Script deploy (New version), Access = Anyone, aur /exec URL sahi hai.";
+  if (m === "OFFLINE") return "You are offline — try again when the connection is back.";
+  if (m === "EDIT_KEY_REQUIRED") return "Editing is locked — unlock it with the password first.";
+  if (m === "AUTH_REQUIRED") return "Your session has expired — log in again with your PIN.";
+  if (m === "READ_ONLY") return "You have read-only access (viewer).";
+  if (m === "ADMIN_ONLY") return "Only an admin can do this.";
+  if (m === "BADREPLY") return "The server reply is invalid. Did you deploy a 'New version' of the Apps Script? (Access: Anyone)";
+  if (/failed to fetch|networkerror|load failed/i.test(m)) return "Could not reach the server. Check: Apps Script deployed (New version), Access = Anyone, and the /exec URL is correct.";
   return m;
 }
 
-/* ───────────── state ↔ storage ───────────── */
+/* ───────────── state aur storage ───────────── */
 function applyData(d, fromCache) {
   var sig = JSON.stringify([d.tabs, d.items, d.warnings]);
   S.locked = !!d.locked; S.sheetUrl = d.sheetUrl || S.sheetUrl; S.warnings = d.warnings || []; S.stale = !d.v; applyAuth(d);
@@ -652,7 +652,7 @@ function applyData(d, fromCache) {
 }
 function saveCache() { lsSet(LS.cache, JSON.stringify({ tabs: S.tabs, items: S.items, locked: S.locked, sheetUrl: S.sheetUrl, warnings: S.warnings, ts: S.lastSync })); }
 
-/* ───────────── login / lock / fingerprint ───────────── */
+/* ───────────── login, lock aur fingerprint ───────────── */
 var AUTH = { on: lsGet(LS.auth) === "1", token: "", user: "", role: "", locked: false, mode: "login", fails: 0, until: 0, hiddenAt: 0 };
 (function () { try { var s = JSON.parse(lsGet(LS.tok) || "null"); if (s && s.t) { AUTH.token = s.t; AUTH.user = s.u || ""; AUTH.role = s.r || ""; } } catch (e) {} })();
 S.role = AUTH.role;
@@ -678,7 +678,7 @@ function bioSupported() { return !!(window.PublicKeyCredential && navigator.cred
 function bioInfo() { try { var b = JSON.parse(lsGet(LS.bio) || "null"); return b && b.u && AUTH.user && b.u.toLowerCase() === AUTH.user.toLowerCase() ? b : null; } catch (e) { return null; } }
 function rnd(n) { var a = new Uint8Array(n); crypto.getRandomValues(a); return a; }
 function bioEnable() {
-  if (!bioSupported()) return Promise.reject(new Error("Is device/browser me fingerprint unlock available nahi hai."));
+  if (!bioSupported()) return Promise.reject(new Error("Fingerprint unlock is not available on this device or browser."));
   return navigator.credentials.create({ publicKey: {
     challenge: rnd(32), rp: { name: "CMD Notes", id: location.hostname },
     user: { id: rnd(16), name: AUTH.user, displayName: AUTH.user },
@@ -697,10 +697,10 @@ function showLock(mode, msg) {
   var unlock = mode === "unlock", offer = mode === "offer";
   $("lkTitle").textContent = offer ? "Fingerprint unlock?" : unlock ? "Welcome, " + AUTH.user : "cmd_notes login";
   $("lkIcon").textContent = offer ? "👆" : unlock ? "🔒" : "🔐";
-  $("lkSub").textContent = offer ? "Agli baar PIN ki jagah fingerprint/face se khulega." : (msg || (unlock ? "PIN daalo" : "User aur PIN daalo"));
+  $("lkSub").textContent = offer ? "Next time it opens with your fingerprint or face instead of the PIN." : (msg || (unlock ? "Enter your PIN" : "Enter your user name and PIN"));
   $("lkUserRow").style.display = (unlock || offer) ? "none" : "";
   $("lkPinRow").style.display = offer ? "none" : "";
-  $("lkGo").textContent = offer ? "👆 Enable karo" : unlock ? "Unlock" : "Login";
+  $("lkGo").textContent = offer ? "👆 Enable" : unlock ? "Unlock" : "Login";
   $("lkBioNo").style.display = offer ? "" : "none";
   $("lkSwitch").style.display = unlock ? "" : "none";
   var canBio = unlock && !!bioInfo() && bioSupported();
@@ -722,26 +722,26 @@ function lockApp() { if (!AUTH.on || !AUTH.token) return; showLock("unlock"); }
 function authExpired() {
   if (AUTH.locked && AUTH.mode === "login") return;
   AUTH.token = ""; lsDel(LS.tok); lsDel(LS.ver); AUTH.on = true; lsSet(LS.auth, "1");
-  showLock("login", "Login karo (session khatam ya naya login chahiye)");
+  showLock("login", "Please log in (session ended or a new login is needed)");
 }
 function bioUnlock(auto) {
-  bioCheck().then(function () { hideLock(); }).catch(function (e) { if (!auto) lkMsg("Fingerprint match nahi hua — PIN daalo."); });
+  bioCheck().then(function () { hideLock(); }).catch(function (e) { if (!auto) lkMsg("Fingerprint did not match — enter your PIN."); });
 }
 function lkCooldown() {
-  if (Date.now() < AUTH.until) { lkMsg("Bahut galat try — " + Math.ceil((AUTH.until - Date.now()) / 1000) + " sec ruko."); return true; }
+  if (Date.now() < AUTH.until) { lkMsg("Too many wrong attempts — wait " + Math.ceil((AUTH.until - Date.now()) / 1000) + " sec."); return true; }
   return false;
 }
 function pinSubmit() {
   var mode = AUTH.mode;
-  if (mode === "offer") { return bioEnable().then(function () { toast("Fingerprint unlock on ✓", "ok"); hideLock(); }).catch(function (e) { lkMsg((e && e.name === "NotAllowedError") ? "Cancel ho gaya." : (e.message || "Enable nahi hua"), true); }); }
+  if (mode === "offer") { return bioEnable().then(function () { toast("Fingerprint unlock on ✓", "ok"); hideLock(); }).catch(function (e) { lkMsg((e && e.name === "NotAllowedError") ? "Cancelled." : (e.message || "Could not enable"), true); }); }
   if (lkCooldown()) return;
   var pin = $("lkPin").value.trim(), user = mode === "unlock" ? AUTH.user : $("lkUser").value.trim();
-  if (!user) return lkMsg("User name daalo.");
-  if (!pin) return lkMsg("PIN daalo.");
+  if (!user) return lkMsg("Enter your user name.");
+  if (!pin) return lkMsg("Enter your PIN.");
   var go = $("lkGo"); go.disabled = true;
   function fail(msg) { AUTH.fails++; if (AUTH.fails >= 5) { AUTH.until = Date.now() + 30000; AUTH.fails = 0; } $("lkPin").value = ""; lkMsg(msg); }
   function viaServer() {
-    if (navigator.onLine === false) return fail("Offline — is PIN se unlock nahi hua.");
+    if (navigator.onLine === false) return fail("Offline — could not unlock with this PIN.");
     return api("login", { user: user, pin: pin }).then(function (res) {
       return saveSession(res, pin).then(function () {
         AUTH.fails = 0;
@@ -770,12 +770,12 @@ function logout() {
   AUTH.token = ""; AUTH.role = ""; S.role = ""; lsDel(LS.tok); lsDel(LS.ver); lsDel(LS.bio); lsDel(LS.cache);
   S.items = []; S.tabs = []; S.sig = ""; S.loaded = false; S.failed = false; renderAll(); showLock("login");
 }
-/* security dialog */
+/* security dialog (PIN badalna, logout) */
 function secOpen() {
-  $("secUser").textContent = AUTH.user; $("secRole").textContent = ({ admin: "Admin — sab kuch", editor: "Editor — add / edit / delete", viewer: "Viewer — sirf padhna" })[AUTH.role] || "";
+  $("secUser").textContent = AUTH.user; $("secRole").textContent = ({ admin: "Admin — full access", editor: "Editor — add / edit / delete", viewer: "Viewer — read only" })[AUTH.role] || "";
   var sup = bioSupported(), on = !!bioInfo();
   $("secBioRow").style.display = sup ? "" : "none";
-  $("secBio").textContent = on ? "Band karo" : "Enable karo"; $("secBioSt").textContent = on ? "Abhi ON hai" : "Abhi OFF hai";
+  $("secBio").textContent = on ? "Turn off" : "Turn on"; $("secBioSt").textContent = on ? "Currently ON" : "Currently OFF";
   $("secAuto").value = lsGet(LS.lockmin) == null ? "1" : lsGet(LS.lockmin);
   ["pOld", "pNew", "pNew2"].forEach(function (i) { $(i).value = ""; }); $("pinErr").style.display = "none";
   openOv("secOv");
@@ -785,20 +785,20 @@ $("secLock").onclick = function () { closeAll(); lockApp(); };
 $("secOut").onclick = function () { closeAll(); logout(); };
 $("secAuto").onchange = function () { lsSet(LS.lockmin, this.value); toast("Auto-lock set ✓", "ok", 1200); };
 $("secBio").onclick = function () {
-  if (bioInfo()) { lsDel(LS.bio); lsSet(LS.bioNo, "1"); secOpen(); toast("Fingerprint unlock band"); return; }
-  bioEnable().then(function () { lsDel(LS.bioNo); secOpen(); toast("Fingerprint unlock on ✓", "ok"); }).catch(function (e) { toast((e && e.name === "NotAllowedError") ? "Cancel ho gaya" : (e.message || "Enable nahi hua"), "bad"); });
+  if (bioInfo()) { lsDel(LS.bio); lsSet(LS.bioNo, "1"); secOpen(); toast("Fingerprint unlock turned off"); return; }
+  bioEnable().then(function () { lsDel(LS.bioNo); secOpen(); toast("Fingerprint unlock on ✓", "ok"); }).catch(function (e) { toast((e && e.name === "NotAllowedError") ? "Cancelled" : (e.message || "Could not enable"), "bad"); });
 };
 $("pinForm").addEventListener("submit", function (e) {
   e.preventDefault(); var er = $("pinErr"), o = $("pOld").value, n = $("pNew").value, n2 = $("pNew2").value;
   function bad(m) { er.textContent = m; er.style.display = "block"; }
-  if (!/^[0-9]{4,8}$/.test(n)) return bad("Naya PIN 4 se 8 digit ka hona chahiye.");
-  if (n !== n2) return bad("Dono naye PIN same nahi hain.");
+  if (!/^[0-9]{4,8}$/.test(n)) return bad("The new PIN must be 4 to 8 digits.");
+  if (n !== n2) return bad("The two new PINs do not match.");
   api("changePin", { oldPin: o, newPin: n }).then(function () {
-    return saveSession({ token: AUTH.token, user: AUTH.user, role: AUTH.role }, n).then(function () { closeAll(); toast("PIN badal gaya ✓", "ok"); });
+    return saveSession({ token: AUTH.token, user: AUTH.user, role: AUTH.role }, n).then(function () { closeAll(); toast("PIN changed ✓", "ok"); });
   }).catch(function (e2) { bad(friendly(e2)); });
 });
 
-/* ───────────── sync ───────────── */
+/* ───────────── sync (sheet se data lena) ───────────── */
 var syncing = false, syncAgain = false;
 function setLive(kind, txt) { var p = $("livePill"); p.className = "pill " + (kind || ""); $("liveTxt").textContent = txt; }
 function refreshLive() {
@@ -812,16 +812,16 @@ function sync(silent) {
   syncing = true; refreshLive();
   return api("list").then(function (d) {
     S.offline = false; hideBanner();
-    if (S.stale) showBanner("warn", "⚠️ Apps Script ka Code.gs purana hai (tag/section nahi dikhenge). Naya Code.gs paste karo → Deploy → Manage deployments → ✏️ → New version → Deploy.", false);
+    if (S.stale) showBanner("warn", "⚠️ The Apps Script Code.gs is outdated (tags and sections will not show). Paste the new Code.gs → Deploy → Manage deployments → ✏️ → New version → Deploy.", false);
     else if (d.warnings && d.warnings.length) showBanner("warn", "⚠️ " + d.warnings[0] + (d.warnings.length > 1 ? "  (+" + (d.warnings.length - 1) + " aur)" : ""), false);
-    if (S.busy) return;                         // a write is in flight; its own sync will follow
+    if (S.busy) return;                         // ek write chal raha hai; uska apna sync baad me aayega
     var changed = applyData(d, false);
     saveCache();
     if (changed || !silent) renderAll();
   }).catch(function (e) {
     var m = (e && e.message) || "";
     if (m === "AUTH_REQUIRED") return;
-    if (m === "OFFLINE") { S.offline = true; if (!S.loaded) showBanner("warn", "Offline — cached data dikh raha hai."); }
+    if (m === "OFFLINE") { S.offline = true; if (!S.loaded) showBanner("warn", "Offline — showing cached data."); }
     else { showBanner("err", friendly(e), true); }
     if (!S.loaded) { S.failed = true; renderAll(); }
   }).then(function () { syncing = false; refreshLive(); if (syncAgain) { syncAgain = false; return sync(false); } });
@@ -841,9 +841,9 @@ document.addEventListener("visibilitychange", function () {
   if (!document.hidden && gasUrl()) sync(true);
 });
 window.addEventListener("online", function () { S.offline = false; toast("Back online", "ok"); sync(true); });
-window.addEventListener("offline", function () { S.offline = true; refreshLive(); toast("Offline — cached commands dikh rahe hain"); });
+window.addEventListener("offline", function () { S.offline = true; refreshLive(); toast("Offline — showing cached commands"); });
 
-/* ───────────── write queue (optimistic) ───────────── */
+/* ───────────── write queue (optimistic UI) ───────────── */
 function enqueue(job) {
   S.busy++; refreshLive();
   S.queue = S.queue.then ? S.queue : Promise.resolve();
@@ -852,7 +852,7 @@ function enqueue(job) {
   return S.queue;
 }
 S.queue = Promise.resolve();
-function canEdit() { if (S.role === "viewer") { toast("Aapko sirf padhne ka access hai (viewer)", "bad"); return false; } if (S.offline || navigator.onLine === false) { toast("Offline — add/edit internet aane par hoga", "bad"); return false; } if (S.locked && !S.key) { openKey(); return false; } return true; }
+function canEdit() { if (S.role === "viewer") { toast("You have read-only access (viewer)", "bad"); return false; } if (S.offline || navigator.onLine === false) { toast("Offline — add/edit needs an internet connection", "bad"); return false; } if (S.locked && !S.key) { openKey(); return false; } return true; }
 function pick(it) { return { cmd: it.cmd, tag: it.tag || "", category: it.category || "", purpose: it.purpose || "", example: it.example || "" }; }
 
 /* ───────────── render ───────────── */
@@ -911,14 +911,14 @@ function filtered() {
 function card(i, idx) {
   var q = S.q.trim(), cat = dv(i.category), ex = dv(i.example), pu = dv(i.purpose), tg = tagsOf(i), w = when(i);
   return '<article class="card' + (i.tmp ? " pending" : "") + (i.favorite ? " isfav" : "") + '" data-i="' + idx + '" style="--h:' + hue(cat || i.tab) + ';animation-delay:' + Math.min(idx, 12) * 18 + 'ms">' +
-    '<header>' + (cat ? '<span class="badge" data-act="fcat" data-v="' + esc(cat) + '" title="Is category ke commands">' + hl(cat, q) + "</span>" : "") +
+    '<header>' + (cat ? '<span class="badge" data-act="fcat" data-v="' + esc(cat) + '" title="Show this category">' + hl(cat, q) + "</span>" : "") +
     (S.tab === "__all" || S.tab === "__fav" ? '<span class="tagtab">' + esc(i.tab) + "</span>" : "") +
     '<div class="acts"><button class="star' + (i.favorite ? " on" : "") + '" data-act="fav" aria-label="Favourite" title="Favourite">' + (i.favorite ? "★" : "☆") + '</button>' +
     '<button data-act="edit" aria-label="Edit" title="Edit">' + ICON.edit + '</button><button class="del" data-act="del" aria-label="Delete" title="Delete">' + ICON.del + "</button></div></header>" +
     '<div class="cmd" data-act="copy-cmd" title="Click to copy"><pre>' + hl(i.cmd, q) + '</pre><span class="cp">' + ICON.copy + "</span></div>" +
     (pu ? '<p class="purpose">' + hl(pu, q) + "</p>" : "") +
     (ex ? '<div class="ex"><span class="lbl">Example</span><div class="body" data-act="copy-ex" title="Click to copy"><pre>' + hl(ex, q) + '</pre><span class="cp">' + ICON.copy + "</span></div></div>" : "") +
-    ((tg.length || w) ? '<div class="cardfoot"><div class="tags">' + tg.map(function (x) { return '<span class="tgp" data-act="ftag" data-v="' + esc(x) + '" title="Is tag ke commands">' + hl(x, q) + "</span>"; }).join("") + '</div>' +
+    ((tg.length || w) ? '<div class="cardfoot"><div class="tags">' + tg.map(function (x) { return '<span class="tgp" data-act="ftag" data-v="' + esc(x) + '" title="Show this tag">' + hl(x, q) + "</span>"; }).join("") + '</div>' +
       (w ? '<span class="when" title="' + esc(i.updated_at || i.created_at) + '">' + esc(w) + "</span>" : "") + "</div>" : "") +
     "</article>";
 }
@@ -926,13 +926,13 @@ var shown = [];
 function rowItem(i, idx) {
   var q = S.q.trim(), cat = dv(i.category), ex = dv(i.example), pu = dv(i.purpose), tg = tagsOf(i), w = when(i);
   var key = i.id || (i.tab + ":" + i.row), open = !!S.openRows[key];
-  var tagp = function (x) { return '<span class="tgp" data-act="ftag" data-v="' + esc(x) + '" title="Is tag ke commands">' + hl(x, q) + "</span>"; };
+  var tagp = function (x) { return '<span class="tgp" data-act="ftag" data-v="' + esc(x) + '" title="Show this tag">' + hl(x, q) + "</span>"; };
   return '<article class="rw' + (open ? " open" : "") + (i.tmp ? " pending" : "") + '" data-i="' + idx + '" data-k="' + esc(key) + '" style="--h:' + hue(cat || i.tab) + '">' +
     '<div class="rsum" data-act="open"><button class="rs star' + (i.favorite ? " on" : "") + '" data-act="fav" aria-label="Favourite">' + (i.favorite ? "★" : "☆") + "</button>" +
     '<div class="rc" title="' + esc(i.cmd) + '">' + hl(i.cmd, q) + "</div>" +
     '<div class="rp">' + hl(pu, q) + "</div>" +
     '<div class="rt">' + tg.slice(0, 3).map(tagp).join("") + (tg.length > 3 ? '<span class="tgp" style="cursor:default">+' + (tg.length - 3) + "</span>" : "") + "</div>" +
-    '<div class="rg">' + (cat ? '<span class="badge" data-act="fcat" data-v="' + esc(cat) + '" title="Is category ke commands">' + hl(cat, q) + "</span>" : "") + "</div>" +
+    '<div class="rg">' + (cat ? '<span class="badge" data-act="fcat" data-v="' + esc(cat) + '" title="Show this category">' + hl(cat, q) + "</span>" : "") + "</div>" +
     '<span class="chev">▼</span></div>' +
     '<div class="rdet">' +
     '<div class="kv"><span>Command</span><div class="box" data-act="copy-cmd" title="Click to copy"><pre>' + esc(i.cmd) + '</pre><span class="cp">' + ICON.copy + "</span></div></div>" +
@@ -952,15 +952,15 @@ function groupKeys(it) {
 function renderGrid() {
   var g = $("grid");
   var rows = S.view === "list"; g.className = "grid" + (rows ? " rows" : "");
-  if (!S.loaded && S.failed) { g.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="big">📡</div><h3>Data load nahi hua</h3><p>Upar ka message dekho, phir Retry dabao.</p></div>'; $("count").textContent = ""; return; }
+  if (!S.loaded && S.failed) { g.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="big">📡</div><h3>Could not load data</h3><p>Read the message above, then press Retry.</p></div>'; $("count").textContent = ""; return; }
   if (!S.loaded) { g.innerHTML = '<div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>'; $("count").textContent = ""; return; }
   var list = filtered();
   $("count").textContent = list.length + (list.length === 1 ? " item" : " items");
   if (!list.length) {
     shown = [];
     var any = S.items.length > 0;
-    g.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="big">' + (any ? "🔍" : "📝") + "</div><h3>" + (any ? "Kuch nahi mila" : "Abhi koi command nahi") + "</h3><p>" +
-      (any ? "Search ya filter badal ke dekho." : "＋ Add dabao aur apni pehli command save karo.") + "</p></div>";
+    g.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="big">' + (any ? "🔍" : "📝") + "</div><h3>" + (any ? "Nothing found" : "No commands yet") + "</h3><p>" +
+      (any ? "Try a different search or filter." : "Press ＋ Add and save your first command.") + "</p></div>";
     return;
   }
   shown = [];
@@ -993,7 +993,7 @@ function renderSide() {
 }
 function renderAll() { renderTabs(); renderCats(); renderTitle(); renderSide(); renderGrid(); }
 
-/* ───────────── interactions ───────────── */
+/* ───────────── interactions (click aur keys) ───────────── */
 function setTab(name) { S.tab = name; S.cat = ""; S.tag = ""; lsSet(LS.tab, name); renderAll(); $("main").scrollTo({ top: 0 }); }
 document.addEventListener("click", function (e) {
   var t = e.target.closest("[data-tab]"); if (t && (t.closest("#sideTabs") || t.closest("#mobTabs"))) return setTab(t.getAttribute("data-tab"));
@@ -1021,7 +1021,7 @@ function copy(text, el) {
   if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
   function fallback() {
     var ta = document.createElement("textarea"); ta.value = text; ta.style.cssText = "position:fixed;opacity:0"; document.body.appendChild(ta); ta.select();
-    try { document.execCommand("copy"); done(); } catch (e) { toast("Copy nahi hua — manually select karo", "bad"); } ta.remove();
+    try { document.execCommand("copy"); done(); } catch (e) { toast("Copy failed — select the text manually", "bad"); } ta.remove();
   }
 }
 var qEl = $("q");
@@ -1036,12 +1036,12 @@ function setTheme(t) { document.documentElement.setAttribute("data-theme", t); l
 
 function toggleFav(it) {
   if (!canEdit()) return;
-  if (it.tmp) return toast("Save ho raha hai… thodi der ruko");
+  if (it.tmp) return toast("Still saving… please wait");
   it.favorite = !it.favorite; renderAll();
   var orig = pick(it), id = it.id, row = it.row, tab = it.tab, f = it.favorite;
   enqueue(function () { return api("favorite", { tab: tab, id: id, row: row, orig: orig, favorite: f }).then(function () { toast(f ? "⭐ Favourite" : "Favourite hata diya", "ok", 1400); }); });
 }
-/* ── modals ── */
+/* ── modals (popup windows) ── */
 function openOv(id) { $(id).classList.add("show"); }
 function closeAll() { document.querySelectorAll(".ov.show").forEach(function (o) { o.classList.remove("show"); }); S.editing = null; S.delItem = null; if ($("setup").style.display === "flex" && gasUrl()) $("setup").style.display = "none"; }
 function fillTabSelect(sel) {
@@ -1079,7 +1079,7 @@ function comboRender(cb) {
   panel.innerHTML = opts.length ? opts.map(function (o) {
     var on = multi ? picked.indexOf(o.name.toLowerCase()) >= 0 : inp.value.trim().toLowerCase() === o.name.toLowerCase();
     return '<div class="opt' + (on ? " sel" : "") + '" data-v="' + esc(o.name) + '"><span class="ck">' + (on ? "✓" : "") + "</span>" + esc(o.name) + (o.n ? '<span class="n">' + o.n + "</span>" : "") + "</div>";
-  }).join("") : '<div class="none">Kuch nahi — naya naam type karo</div>';
+  }).join("") : '<div class="none">No match — type a new name</div>';
 }
 function comboOpen(cb, yes) {
   document.querySelectorAll(".combo.open").forEach(function (c) { if (c !== cb) c.classList.remove("open"); });
@@ -1105,7 +1105,7 @@ document.querySelectorAll(".combo").forEach(function (cb) {
 document.addEventListener("mousedown", function (e) { if (!e._inCombo && !e.target.closest(".combo")) document.querySelectorAll(".combo.open").forEach(function (c) { c.classList.remove("open"); }); });
 function openAdd() {
   if (!canEdit()) return;
-  if (!S.tabs.length) return toast("Pehle sheet load hone do ya naya section banao", "bad");
+  if (!S.tabs.length) return toast("Wait for the sheet to load, or create a new section first", "bad");
   S.editing = null;
   $("editTitle").textContent = "New command"; $("delBtn").style.display = "none"; $("fTab").disabled = false;
   fillTabSelect(S.tab !== "__all" && S.tab !== "__fav" ? S.tab : (lsGet(LS.tab) && S.tabs.some(function (t) { return t.name === lsGet(LS.tab); }) ? lsGet(LS.tab) : S.tabs[0].name));
@@ -1115,7 +1115,7 @@ function openAdd() {
 }
 function openEdit(it) {
   if (!canEdit()) return;
-  if (it.tmp) return toast("Save ho raha hai… thodi der ruko");
+  if (it.tmp) return toast("Still saving… please wait");
   S.editing = it;
   $("editTitle").textContent = "Edit command"; $("delBtn").style.display = ""; fillTabSelect(it.tab); $("fTab").disabled = true;
   fillCatList(it.tab);
@@ -1127,7 +1127,7 @@ $("fab").onclick = openAdd; $("addTop").onclick = openAdd;
 $("editForm").addEventListener("submit", function (e) {
   e.preventDefault();
   var d = { cmd: $("fCmd").value, category: $("fCat").value, tag: tagsOf({ tag: $("fTag").value }).join(", "), purpose: $("fPurpose").value, example: $("fEx").value, favorite: $("fFav").checked };
-  if (!d.cmd.trim()) { var er = $("editErr"); er.textContent = "Command likhna zaroori hai."; er.style.display = "block"; $("fCmd").focus(); return; }
+  if (!d.cmd.trim()) { var er = $("editErr"); er.textContent = "A command is required."; er.style.display = "block"; $("fCmd").focus(); return; }
   var tab = $("fTab").value, it = S.editing;
   closeAll();
   if (it) {
@@ -1143,7 +1143,7 @@ $("editForm").addEventListener("keydown", function (e) { if ((e.ctrlKey || e.met
 $("delBtn").onclick = function () { var it = S.editing; closeAll(); if (it) askDelete(it); };
 function askDelete(it) {
   if (!canEdit()) return;
-  if (it.tmp) return toast("Save ho raha hai… thodi der ruko");
+  if (it.tmp) return toast("Still saving… please wait");
   S.delItem = it; $("confCmd").textContent = it.cmd; openOv("confOv");
 }
 $("confYes").onclick = function () {
@@ -1151,11 +1151,11 @@ $("confYes").onclick = function () {
   S.items = S.items.filter(function (x) { return x !== it; }); renderAll();
   enqueue(function () { return api("delete", { tab: it.tab, row: it.row, id: it.id, orig: pick(it) }).then(function () { toast("Deleted", "ok"); }); });
 };
-/* new tab */
+/* naya tab */
 $("newTabBtn").onclick = function () { if (!canEdit()) return; $("tName").value = ""; $("tabErr").style.display = "none"; openOv("tabOv"); setTimeout(function () { $("tName").focus(); }, 60); };
 $("tabForm").addEventListener("submit", function (e) {
   e.preventDefault(); var n = $("tName").value.trim(); if (!n) return;
-  closeAll(); enqueue(function () { return api("addTab", { name: n }).then(function () { S.tab = n; lsSet(LS.tab, n); toast("Section ban gaya ✓", "ok"); }); });
+  closeAll(); enqueue(function () { return api("addTab", { name: n }).then(function () { S.tab = n; lsSet(LS.tab, n); toast("Section created ✓", "ok"); }); });
 });
 /* unlock */
 function openKey() { $("kIn").value = ""; $("keyErr").style.display = "none"; openOv("keyOv"); setTimeout(function () { $("kIn").focus(); }, 60); }
@@ -1163,7 +1163,7 @@ $("lockBtn").onclick = openKey;
 $("keyForm").addEventListener("submit", function (e) {
   e.preventDefault(); var k = $("kIn").value;
   S.key = k;
-  api("checkKey", { key: k }).then(function (r) { if (r.ok) { lsSet(LS.key, k); closeAll(); renderSide(); toast("Unlocked ✓", "ok"); } else { S.key = ""; $("keyErr").textContent = "Password galat hai."; $("keyErr").style.display = "block"; } })
+  api("checkKey", { key: k }).then(function (r) { if (r.ok) { lsSet(LS.key, k); closeAll(); renderSide(); toast("Unlocked ✓", "ok"); } else { S.key = ""; $("keyErr").textContent = "Wrong password."; $("keyErr").style.display = "block"; } })
     .catch(function (er) { S.key = ""; $("keyErr").textContent = friendly(er); $("keyErr").style.display = "block"; });
 });
 /* setup */
@@ -1192,10 +1192,10 @@ $("sCancel").onclick = function () { $("setup").style.display = "none"; };
 $("setupForm").addEventListener("submit", function (e) {
   e.preventDefault();
   var v = $("sUrl").value.trim().split("?")[0].split("#")[0];
-  if (!validUrl(v)) { $("sErr").textContent = "https://script.google.com/…/exec wala URL daalo."; $("sErr").style.display = "block"; return; }
+  if (!validUrl(v)) { $("sErr").textContent = "Enter a URL like https://script.google.com/…/exec."; $("sErr").style.display = "block"; return; }
   lsSet(LS.url, v); lsDel(LS.cache); location.reload();
 });
-/* keyboard */
+/* keyboard shortcuts */
 document.addEventListener("keydown", function (e) {
   var typing = /input|textarea|select/i.test((e.target.tagName || ""));
   if (e.key === "Escape") { if (document.querySelector(".ov.show")) closeAll(); else if (S.q) $("qClr").click(); return; }
@@ -1204,7 +1204,7 @@ document.addEventListener("keydown", function (e) {
   else if (e.key === "n") { e.preventDefault(); openAdd(); }
 });
 
-/* ───────────── PWA: install, SW, URL params ───────────── */
+/* ───────────── PWA: install, service worker aur URL params ───────────── */
 function isStandalone() {
   return window.matchMedia("(display-mode: standalone)").matches || window.matchMedia("(display-mode: minimal-ui)").matches || window.navigator.standalone === true;
 }
@@ -1225,7 +1225,7 @@ installBtn.onclick = async function () {
   deferredInstallPrompt = null; installBtn.classList.remove("show");
 };
 $("iosOk").onclick = function () { $("iosBanner").classList.remove("show"); };
-if (!isStandalone() && isIOSSafari()) installBtn.classList.add("show");     // iOS never fires beforeinstallprompt
+if (!isStandalone() && isIOSSafari()) installBtn.classList.add("show");     // iOS kabhi beforeinstallprompt event nahi bhejta
 
 if ("serviceWorker" in navigator) {
   var hadCtl = !!navigator.serviceWorker.controller;
@@ -1235,7 +1235,7 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-/* ───────────── boot ───────────── */
+/* ───────────── app start ───────────── */
 function matchTab(param) {
   param = String(param || "").toLowerCase().replace(/[^a-z0-9]/g, ""); if (!param) return null;
   var names = S.tabs.map(function (t) { return t.name; });
@@ -1270,7 +1270,7 @@ function startApp() {
   if (S.offline === false && navigator.onLine === false) { S.offline = true; refreshLive(); }
 }
 if (!gasUrl()) { renderAll(); showSetup(false); }
-else if (AUTH.on) {                                    // data stays hidden until PIN / fingerprint
+else if (AUTH.on) {                                    // PIN / fingerprint se unlock hone tak data chhupa rehta hai
   renderAll();
   if (AUTH.token) showLock("unlock");
   else { showLock("login"); api("ping").then(function (r) { if (r && r.auth === false) { AUTH.on = false; lsSet(LS.auth, "0"); AUTH.locked = false; $("lock").classList.remove("show"); startApp(); } }).catch(function () {}); }
