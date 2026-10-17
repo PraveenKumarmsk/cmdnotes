@@ -1,9 +1,9 @@
 // ════════════════════════════════════════════════════════════════════════════
 // CMD Notes — Service Worker
-// Bump VERSION to force an update on every device. Old caches are deleted.
-// Sheet data is NOT cached here (the app keeps its own copy in localStorage).
+// VERSION badlo to har device par update force hota hai. Purane caches delete ho jaate hain.
+// Sheet ka data yahan cache NAHI hota (app apni copy localStorage me rakhta hai).
 // ════════════════════════════════════════════════════════════════════════════
-const VERSION = 'cmdnotes-v2.4.0';
+const VERSION = 'cmdnotes-v2.5.0';
 const CACHE_SHELL   = VERSION + '-shell';
 const CACHE_RUNTIME = VERSION + '-runtime';
 const CACHE_IMAGES  = VERSION + '-images';
@@ -33,10 +33,10 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
   let url; try { url = new URL(req.url); } catch (e) { return; }
-  if (url.origin !== self.location.origin) return;          // Google Apps Script calls go straight to the network
-  if (url.searchParams.has('ping')) return;                 // real connectivity checks
+  if (url.origin !== self.location.origin) return;          // Google Apps Script ke calls seedhe network par jaate hain
+  if (url.searchParams.has('ping')) return;                 // asli internet connectivity check
 
-  // Pages: network-first, offline fallback
+  // Pages: pehle network, na mile to offline page
   if (req.mode === 'navigate') {
     event.respondWith((async () => {
       try {
@@ -56,7 +56,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Images / icons: cache-first
+  // Images / icons: pehle cache
   if (req.destination === 'image' || /\.(png|jpe?g|svg|gif|webp|ico)$/i.test(url.pathname)) {
     event.respondWith((async () => {
       const cached = await caches.match(req);
@@ -70,7 +70,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // HTML / CSS / JS / JSON: network-first, cache fallback
+  // HTML / CSS / JS / JSON: pehle network, na mile to cache
   event.respondWith((async () => {
     try {
       const res = await fetch(req, { cache: 'no-cache' });
