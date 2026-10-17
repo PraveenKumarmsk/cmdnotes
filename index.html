@@ -272,6 +272,29 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
 .cpanel .opt .ck{width:16px;color:var(--accent);font-weight:800}
 .cpanel .opt .n{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--faint)}
 .cpanel .none{padding:10px;color:var(--faint);font-size:.85rem}
+/* ── Lock screen / Security ────────────────────────────── */
+#lock{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;padding:20px;background:var(--bg);overflow-y:auto}
+#lock.show{display:flex}
+.lockbox{width:100%;max-width:340px;display:flex;flex-direction:column;align-items:stretch;gap:12px;text-align:center}
+.lockbox .lk-logo{width:64px;height:64px;border-radius:18px;margin:0 auto;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-size:1.9rem}
+.lockbox h2{font-size:1.25rem;font-weight:800}
+.lockbox .sub{color:var(--mute);font-size:.88rem;min-height:1.2em}
+.lockbox input{width:100%;background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:13px 14px;font-size:1rem;outline:none;text-align:center;color:var(--text)}
+.lockbox input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+#lkPin{font-size:1.5rem;letter-spacing:.5em;font-family:var(--mono)}
+#lkPin::placeholder{letter-spacing:.1em;font-size:.95rem;font-family:var(--ui)}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:2px 0}
+.pad button{height:56px;border-radius:14px;border:1px solid var(--line);background:var(--panel);font-size:1.3rem;font-weight:700;color:var(--text);transition:.1s}
+.pad button:active{background:var(--accent-soft);border-color:var(--accent);transform:scale(.97)}
+.pad button.fn{font-size:1.05rem;color:var(--mute)}
+.lockbox .linkbtn{color:var(--mute);font-size:.84rem;padding:6px;text-decoration:underline}
+.lockbox .err-line{display:block;min-height:1.2em;text-align:center}
+.lockbox .err-line:empty{display:block}
+body.ro .addtop,body.ro #fab,body.ro [data-act=edit],body.ro [data-act=del],body.ro [data-act=fav]{display:none!important}
+.sec-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}
+.sec-row:last-child{border-bottom:0}
+.sec-row .sl{font-size:.9rem}.sec-row .sl small{display:block;color:var(--faint);font-size:.74rem;margin-top:2px}
+.sec-row select{width:auto;min-width:130px}
 /* ── Phone menu (replaces hidden sidebar footer) ───────── */
 #moreBtn{display:none}
 #moreMenu{position:fixed;right:12px;top:calc(58px + var(--sat,0px));z-index:80;min-width:230px;background:var(--panel);border:1px solid var(--line2,var(--line));border-radius:14px;box-shadow:var(--shadow);padding:6px;display:flex;flex-direction:column}
@@ -350,6 +373,7 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
       <button type="button" role="menuitem" data-go="newTabBtn">＋ New section (tab)</button>
       <a id="moreSheet" role="menuitem" href="#" target="_blank" rel="noopener">📄 Open Google Sheet ↗</a>
       <button type="button" role="menuitem" data-go="lockBtn" id="moreLock" hidden>🔒 Unlock editing</button>
+      <button type="button" role="menuitem" data-go="secBtn" id="moreSec" hidden>🔐 Security</button>
       <button type="button" role="menuitem" data-go="installBtn" id="moreInstall" hidden>⬇️ Install App</button>
       <button type="button" role="menuitem" data-go="setupBtn">⚙️ Server settings</button>
     </div>
@@ -362,6 +386,7 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
       <button id="newTabBtn" type="button">＋ New section (tab)</button>
       <a id="sheetLink" href="#" target="_blank" rel="noopener">📄 Open Google Sheet ↗</a>
       <button id="lockBtn" type="button" style="display:none">🔒 Unlock editing</button>
+      <button id="secBtn" type="button" style="display:none">🔐 Security</button>
       <button id="setupBtn" type="button">⚙️ Server settings</button>
     </div>
   </aside>
@@ -455,6 +480,51 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
   </form>
 </div>
 
+<!-- Login / lock screen -->
+<div id="lock" role="dialog" aria-modal="true" aria-label="Login">
+  <form class="lockbox" id="lockForm" autocomplete="off">
+    <div class="lk-logo" id="lkIcon">🔐</div>
+    <h2 id="lkTitle">cmd_notes</h2>
+    <p class="sub" id="lkSub"></p>
+    <div id="lkUserRow"><input id="lkUser" placeholder="User name" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="username"></div>
+    <div id="lkPinRow">
+      <input id="lkPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="12" placeholder="PIN" autocomplete="off">
+      <div class="pad" id="lkPad">
+        <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+        <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+        <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+        <button type="button" class="fn" data-k="del" aria-label="Delete">⌫</button><button type="button" data-k="0">0</button><button type="button" class="fn" data-k="go" aria-label="OK">✓</button>
+      </div>
+    </div>
+    <div class="err-line" id="lkErr"></div>
+    <button class="btn primary" type="submit" id="lkGo">Unlock</button>
+    <button class="btn ghost" type="button" id="lkBio" style="display:none">👆 Fingerprint se unlock</button>
+    <button class="btn ghost" type="button" id="lkBioNo" style="display:none">Abhi nahi</button>
+    <button class="linkbtn" type="button" id="lkSwitch" style="display:none">Alag user se login</button>
+  </form>
+</div>
+
+<!-- Security -->
+<div class="ov" id="secOv" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:440px">
+    <div class="mh"><h3>🔐 Security</h3><button type="button" class="ibtn" data-close aria-label="Close">✕</button></div>
+    <div class="mb">
+      <div class="sec-row"><div class="sl">Logged in as <b id="secUser"></b><small id="secRole"></small></div><button class="btn ghost" id="secLock" type="button">🔒 Lock now</button></div>
+      <div class="sec-row" id="secBioRow"><div class="sl">Fingerprint / face unlock<small id="secBioSt"></small></div><button class="btn ghost" id="secBio" type="button"></button></div>
+      <div class="sec-row"><div class="sl">Auto-lock<small>App background me jaane ke baad</small></div>
+        <select class="sel" id="secAuto"><option value="0">Turant</option><option value="1">1 minute</option><option value="5">5 minute</option><option value="15">15 minute</option><option value="-1">Kabhi nahi</option></select></div>
+      <form id="pinForm" autocomplete="off" style="padding-top:12px">
+        <div class="fld"><label for="pOld">PIN badlo</label><input id="pOld" type="password" inputmode="numeric" maxlength="12" placeholder="Purana PIN"></div>
+        <div class="fld" style="margin-top:8px"><input id="pNew" type="password" inputmode="numeric" maxlength="8" placeholder="Naya PIN (4–8 digit)"></div>
+        <div class="fld" style="margin-top:8px"><input id="pNew2" type="password" inputmode="numeric" maxlength="8" placeholder="Naya PIN dobara"></div>
+        <div class="err-line" id="pinErr" style="margin-top:8px"></div>
+        <button class="btn primary" type="submit" style="margin-top:10px">PIN save karo</button>
+      </form>
+    </div>
+    <div class="mf"><button class="btn ghost" id="secOut" type="button">🚪 Logout</button><span class="sp"></span><button class="btn ghost" data-close type="button">Close</button></div>
+  </div>
+</div>
+
 <!-- First-run server URL -->
 <div id="setup">
   <form class="modal" id="setupForm" autocomplete="off">
@@ -481,7 +551,7 @@ var GAS_URL = "";
 var POLL_MS = 15000;
 // ═════════════════════════════════════════════════════════════════════════════
 
-var LS = { url: "cmdn_url", cache: "cmdn_cache", tab: "cmdn_tab", theme: "cmdn_theme", key: "cmdn_key", view: "cmdn_view", sort: "cmdn_sort", group: "cmdn_group" };
+var LS = { tok: "cmdn_tok", auth: "cmdn_auth", ver: "cmdn_ver", bio: "cmdn_bio", bioNo: "cmdn_bio_no", lockmin: "cmdn_lockmin", lastUser: "cmdn_lastuser", url: "cmdn_url", cache: "cmdn_cache", tab: "cmdn_tab", theme: "cmdn_theme", key: "cmdn_key", view: "cmdn_view", sort: "cmdn_sort", group: "cmdn_group" };
 var $ = function (id) { return document.getElementById(id); };
 function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -549,12 +619,12 @@ function api(action, data) {
   var base = gasUrl();
   if (!base) { showSetup(false); return Promise.reject(new Error("Server URL set nahi hai.")); }
   if (navigator.onLine === false) return Promise.reject(new Error("OFFLINE"));
-  var body = Object.assign({ action: action, key: S.key }, data || {});
+  var body = Object.assign({ action: action, key: S.key, token: AUTH.token }, data || {});
   return fetch(base, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body), redirect: "follow" })
     .then(function (r) { return r.text(); })
     .then(function (t) {
       var j; try { j = JSON.parse(t); } catch (e) { throw new Error("BADREPLY"); }
-      if (!j.ok && j.error) throw new Error(j.error);
+      if (!j.ok && j.error) { if (j.error === "AUTH_REQUIRED" && action !== "login") authExpired(); throw new Error(j.error); }
       return j;
     });
 }
@@ -562,6 +632,9 @@ function friendly(e) {
   var m = (e && e.message) || String(e);
   if (m === "OFFLINE") return "Offline ho — internet aane par try karo.";
   if (m === "EDIT_KEY_REQUIRED") return "Editing locked hai — pehle password se unlock karo.";
+  if (m === "AUTH_REQUIRED") return "Login ka time khatam — PIN se dobara login karo.";
+  if (m === "READ_ONLY") return "Aapko sirf padhne ka access hai (viewer).";
+  if (m === "ADMIN_ONLY") return "Ye kaam sirf admin kar sakta hai.";
   if (m === "BADREPLY") return "Server ka reply galat hai. Apps Script ko 'New version' deploy kiya? (Access: Anyone)";
   if (/failed to fetch|networkerror|load failed/i.test(m)) return "Server tak nahi pahunch paya. Check: Apps Script deploy (New version), Access = Anyone, aur /exec URL sahi hai.";
   return m;
@@ -570,7 +643,7 @@ function friendly(e) {
 /* ───────────── state ↔ storage ───────────── */
 function applyData(d, fromCache) {
   var sig = JSON.stringify([d.tabs, d.items, d.warnings]);
-  S.locked = !!d.locked; S.sheetUrl = d.sheetUrl || S.sheetUrl; S.warnings = d.warnings || []; S.stale = !d.v;
+  S.locked = !!d.locked; S.sheetUrl = d.sheetUrl || S.sheetUrl; S.warnings = d.warnings || []; S.stale = !d.v; applyAuth(d);
   var changed = sig !== S.sig;
   S.sig = sig; S.tabs = d.tabs || []; S.items = d.items || []; S.loaded = true;
   if (!fromCache) { S.lastSync = d.ts || Date.now(); }
@@ -578,6 +651,152 @@ function applyData(d, fromCache) {
   return changed;
 }
 function saveCache() { lsSet(LS.cache, JSON.stringify({ tabs: S.tabs, items: S.items, locked: S.locked, sheetUrl: S.sheetUrl, warnings: S.warnings, ts: S.lastSync })); }
+
+/* ───────────── login / lock / fingerprint ───────────── */
+var AUTH = { on: lsGet(LS.auth) === "1", token: "", user: "", role: "", locked: false, mode: "login", fails: 0, until: 0, hiddenAt: 0 };
+(function () { try { var s = JSON.parse(lsGet(LS.tok) || "null"); if (s && s.t) { AUTH.token = s.t; AUTH.user = s.u || ""; AUTH.role = s.r || ""; } } catch (e) {} })();
+S.role = AUTH.role;
+function b64(buf) { var s = ""; new Uint8Array(buf).forEach(function (c) { s += String.fromCharCode(c); }); return btoa(s); }
+function unb64(s) { var b = atob(s), a = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return a; }
+function sha(str) {
+  if (!(window.crypto && crypto.subtle)) return Promise.resolve("");
+  return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str)).then(function (h) { return b64(h); });
+}
+function saveSession(res, pin) {
+  AUTH.on = true; AUTH.token = res.token; AUTH.user = res.user; AUTH.role = res.role; S.role = res.role;
+  lsSet(LS.tok, JSON.stringify({ t: res.token, u: res.user, r: res.role })); lsSet(LS.auth, "1"); lsSet(LS.lastUser, res.user);
+  var salt = b64(crypto.getRandomValues ? crypto.getRandomValues(new Uint8Array(12)) : new Uint8Array(12));
+  return sha(salt + "|" + res.user.toLowerCase() + "|" + pin).then(function (h) { if (h) lsSet(LS.ver, JSON.stringify({ u: res.user, s: salt, h: h })); });
+}
+function applyAuth(d) {
+  if (d.auth) { AUTH.on = true; lsSet(LS.auth, "1"); if (d.user) { AUTH.user = d.user; AUTH.role = d.role; S.role = d.role; } }
+  else if (d.auth === false) { if (AUTH.on) { AUTH.on = false; AUTH.token = ""; lsDel(LS.tok); lsDel(LS.ver); lsDel(LS.bio); } lsSet(LS.auth, "0"); S.role = ""; }
+  document.body.classList.toggle("ro", S.role === "viewer");
+  $("secBtn").style.display = AUTH.on ? "" : "none";
+}
+function bioSupported() { return !!(window.PublicKeyCredential && navigator.credentials && window.isSecureContext); }
+function bioInfo() { try { var b = JSON.parse(lsGet(LS.bio) || "null"); return b && b.u && AUTH.user && b.u.toLowerCase() === AUTH.user.toLowerCase() ? b : null; } catch (e) { return null; } }
+function rnd(n) { var a = new Uint8Array(n); crypto.getRandomValues(a); return a; }
+function bioEnable() {
+  if (!bioSupported()) return Promise.reject(new Error("Is device/browser me fingerprint unlock available nahi hai."));
+  return navigator.credentials.create({ publicKey: {
+    challenge: rnd(32), rp: { name: "CMD Notes", id: location.hostname },
+    user: { id: rnd(16), name: AUTH.user, displayName: AUTH.user },
+    pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
+    authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required", residentKey: "discouraged" }, timeout: 60000
+  } }).then(function (c) { lsSet(LS.bio, JSON.stringify({ id: b64(c.rawId), u: AUTH.user })); });
+}
+function bioCheck() {
+  var b = bioInfo(); if (!b) return Promise.reject(new Error("no-bio"));
+  return navigator.credentials.get({ publicKey: { challenge: rnd(32), allowCredentials: [{ type: "public-key", id: unb64(b.id), transports: ["internal"] }], userVerification: "required", timeout: 60000 } });
+}
+var lkErr = $("lkErr");
+function lkMsg(m, bad) { lkErr.textContent = m || ""; lkErr.style.color = bad === false ? "var(--mute)" : ""; }
+function showLock(mode, msg) {
+  AUTH.locked = true; AUTH.mode = mode; closeAll(); $("lock").classList.add("show");
+  var unlock = mode === "unlock", offer = mode === "offer";
+  $("lkTitle").textContent = offer ? "Fingerprint unlock?" : unlock ? "Welcome, " + AUTH.user : "cmd_notes login";
+  $("lkIcon").textContent = offer ? "👆" : unlock ? "🔒" : "🔐";
+  $("lkSub").textContent = offer ? "Agli baar PIN ki jagah fingerprint/face se khulega." : (msg || (unlock ? "PIN daalo" : "User aur PIN daalo"));
+  $("lkUserRow").style.display = (unlock || offer) ? "none" : "";
+  $("lkPinRow").style.display = offer ? "none" : "";
+  $("lkGo").textContent = offer ? "👆 Enable karo" : unlock ? "Unlock" : "Login";
+  $("lkBioNo").style.display = offer ? "" : "none";
+  $("lkSwitch").style.display = unlock ? "" : "none";
+  var canBio = unlock && !!bioInfo() && bioSupported();
+  $("lkBio").style.display = canBio ? "" : "none";
+  $("lkPin").value = ""; lkMsg("");
+  if (!unlock && !offer && !$("lkUser").value) $("lkUser").value = lsGet(LS.lastUser) || "";
+  var coarse = window.matchMedia && matchMedia("(pointer:coarse)").matches;
+  $("lkPin").setAttribute("inputmode", coarse ? "none" : "numeric");
+  $("lkPad").style.display = coarse && !offer ? "" : "none";
+  setTimeout(function () { if (offer) return; (mode === "login" && !$("lkUser").value ? $("lkUser") : $("lkPin")).focus({ preventScroll: true }); }, 80);
+  if (canBio && msg !== "nobio") setTimeout(function () { if (AUTH.locked && AUTH.mode === "unlock") bioUnlock(true); }, 350);
+}
+function hideLock() {
+  AUTH.locked = false; $("lock").classList.remove("show"); $("lkPin").value = "";
+  document.body.classList.toggle("ro", S.role === "viewer");
+  if (!S.loaded) { startApp(); } else { sync(true); }
+}
+function lockApp() { if (!AUTH.on || !AUTH.token) return; showLock("unlock"); }
+function authExpired() {
+  if (AUTH.locked && AUTH.mode === "login") return;
+  AUTH.token = ""; lsDel(LS.tok); lsDel(LS.ver); AUTH.on = true; lsSet(LS.auth, "1");
+  showLock("login", "Login karo (session khatam ya naya login chahiye)");
+}
+function bioUnlock(auto) {
+  bioCheck().then(function () { hideLock(); }).catch(function (e) { if (!auto) lkMsg("Fingerprint match nahi hua — PIN daalo."); });
+}
+function lkCooldown() {
+  if (Date.now() < AUTH.until) { lkMsg("Bahut galat try — " + Math.ceil((AUTH.until - Date.now()) / 1000) + " sec ruko."); return true; }
+  return false;
+}
+function pinSubmit() {
+  var mode = AUTH.mode;
+  if (mode === "offer") { return bioEnable().then(function () { toast("Fingerprint unlock on ✓", "ok"); hideLock(); }).catch(function (e) { lkMsg((e && e.name === "NotAllowedError") ? "Cancel ho gaya." : (e.message || "Enable nahi hua"), true); }); }
+  if (lkCooldown()) return;
+  var pin = $("lkPin").value.trim(), user = mode === "unlock" ? AUTH.user : $("lkUser").value.trim();
+  if (!user) return lkMsg("User name daalo.");
+  if (!pin) return lkMsg("PIN daalo.");
+  var go = $("lkGo"); go.disabled = true;
+  function fail(msg) { AUTH.fails++; if (AUTH.fails >= 5) { AUTH.until = Date.now() + 30000; AUTH.fails = 0; } $("lkPin").value = ""; lkMsg(msg); }
+  function viaServer() {
+    if (navigator.onLine === false) return fail("Offline — is PIN se unlock nahi hua.");
+    return api("login", { user: user, pin: pin }).then(function (res) {
+      return saveSession(res, pin).then(function () {
+        AUTH.fails = 0;
+        var offer = bioSupported() && !bioInfo() && lsGet(LS.bioNo) !== "1";
+        if (offer) { return (window.PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable ? PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable() : Promise.resolve(false)).then(function (ok) { if (ok) showLock("offer"); else hideLock(); }); }
+        hideLock();
+      });
+    }).catch(function (e) { fail(friendly(e)); });
+  }
+  var p = Promise.resolve();
+  if (mode === "unlock") {
+    p = new Promise(function (res) { var v; try { v = JSON.parse(lsGet(LS.ver) || "null"); } catch (e) {} if (!v || v.u.toLowerCase() !== user.toLowerCase()) return res(false); sha(v.s + "|" + user.toLowerCase() + "|" + pin).then(function (h) { res(!!h && h === v.h); }); })
+      .then(function (okLocal) { if (okLocal) { AUTH.fails = 0; hideLock(); return "done"; } });
+  }
+  return p.then(function (done) { if (done !== "done") return viaServer(); }).then(function () { go.disabled = false; }, function () { go.disabled = false; });
+}
+$("lockForm").addEventListener("submit", function (e) { e.preventDefault(); pinSubmit(); });
+$("lkPad").addEventListener("click", function (e) {
+  var b = e.target.closest("[data-k]"); if (!b) return; var k = b.getAttribute("data-k"), el = $("lkPin");
+  if (k === "del") el.value = el.value.slice(0, -1); else if (k === "go") pinSubmit(); else if (el.value.length < 12) el.value += k;
+});
+$("lkBio").onclick = function () { bioUnlock(false); };
+$("lkBioNo").onclick = function () { lsSet(LS.bioNo, "1"); hideLock(); };
+$("lkSwitch").onclick = function () { logout(); };
+function logout() {
+  AUTH.token = ""; AUTH.role = ""; S.role = ""; lsDel(LS.tok); lsDel(LS.ver); lsDel(LS.bio); lsDel(LS.cache);
+  S.items = []; S.tabs = []; S.sig = ""; S.loaded = false; S.failed = false; renderAll(); showLock("login");
+}
+/* security dialog */
+function secOpen() {
+  $("secUser").textContent = AUTH.user; $("secRole").textContent = ({ admin: "Admin — sab kuch", editor: "Editor — add / edit / delete", viewer: "Viewer — sirf padhna" })[AUTH.role] || "";
+  var sup = bioSupported(), on = !!bioInfo();
+  $("secBioRow").style.display = sup ? "" : "none";
+  $("secBio").textContent = on ? "Band karo" : "Enable karo"; $("secBioSt").textContent = on ? "Abhi ON hai" : "Abhi OFF hai";
+  $("secAuto").value = lsGet(LS.lockmin) == null ? "1" : lsGet(LS.lockmin);
+  ["pOld", "pNew", "pNew2"].forEach(function (i) { $(i).value = ""; }); $("pinErr").style.display = "none";
+  openOv("secOv");
+}
+$("secBtn").onclick = secOpen;
+$("secLock").onclick = function () { closeAll(); lockApp(); };
+$("secOut").onclick = function () { closeAll(); logout(); };
+$("secAuto").onchange = function () { lsSet(LS.lockmin, this.value); toast("Auto-lock set ✓", "ok", 1200); };
+$("secBio").onclick = function () {
+  if (bioInfo()) { lsDel(LS.bio); lsSet(LS.bioNo, "1"); secOpen(); toast("Fingerprint unlock band"); return; }
+  bioEnable().then(function () { lsDel(LS.bioNo); secOpen(); toast("Fingerprint unlock on ✓", "ok"); }).catch(function (e) { toast((e && e.name === "NotAllowedError") ? "Cancel ho gaya" : (e.message || "Enable nahi hua"), "bad"); });
+};
+$("pinForm").addEventListener("submit", function (e) {
+  e.preventDefault(); var er = $("pinErr"), o = $("pOld").value, n = $("pNew").value, n2 = $("pNew2").value;
+  function bad(m) { er.textContent = m; er.style.display = "block"; }
+  if (!/^[0-9]{4,8}$/.test(n)) return bad("Naya PIN 4 se 8 digit ka hona chahiye.");
+  if (n !== n2) return bad("Dono naye PIN same nahi hain.");
+  api("changePin", { oldPin: o, newPin: n }).then(function () {
+    return saveSession({ token: AUTH.token, user: AUTH.user, role: AUTH.role }, n).then(function () { closeAll(); toast("PIN badal gaya ✓", "ok"); });
+  }).catch(function (e2) { bad(friendly(e2)); });
+});
 
 /* ───────────── sync ───────────── */
 var syncing = false, syncAgain = false;
@@ -588,6 +807,7 @@ function refreshLive() {
   if (S.lastSync) setLive("", "Live · " + ago(S.lastSync));
 }
 function sync(silent) {
+  if (AUTH.locked) return Promise.resolve();
   if (syncing) { if (!silent) syncAgain = true; return Promise.resolve(); }
   syncing = true; refreshLive();
   return api("list").then(function (d) {
@@ -600,6 +820,7 @@ function sync(silent) {
     if (changed || !silent) renderAll();
   }).catch(function (e) {
     var m = (e && e.message) || "";
+    if (m === "AUTH_REQUIRED") return;
     if (m === "OFFLINE") { S.offline = true; if (!S.loaded) showBanner("warn", "Offline — cached data dikh raha hai."); }
     else { showBanner("err", friendly(e), true); }
     if (!S.loaded) { S.failed = true; renderAll(); }
@@ -611,7 +832,14 @@ $("bannerBtn").onclick = function () { sync(false); };
 
 setInterval(function () { if (!document.hidden && navigator.onLine !== false && !S.busy && gasUrl()) sync(true); }, POLL_MS);
 setInterval(refreshLive, 5000);
-document.addEventListener("visibilitychange", function () { if (!document.hidden && gasUrl()) sync(true); });
+document.addEventListener("visibilitychange", function () {
+  if (document.hidden) { AUTH.hiddenAt = Date.now(); return; }
+  if (AUTH.on && AUTH.token && !AUTH.locked && AUTH.hiddenAt) {
+    var mins = Number(lsGet(LS.lockmin) || 1), away = Date.now() - AUTH.hiddenAt;
+    if (mins >= 0 && away >= mins * 60000) { lockApp(); return; }
+  }
+  if (!document.hidden && gasUrl()) sync(true);
+});
 window.addEventListener("online", function () { S.offline = false; toast("Back online", "ok"); sync(true); });
 window.addEventListener("offline", function () { S.offline = true; refreshLive(); toast("Offline — cached commands dikh rahe hain"); });
 
@@ -624,7 +852,7 @@ function enqueue(job) {
   return S.queue;
 }
 S.queue = Promise.resolve();
-function canEdit() { if (S.offline || navigator.onLine === false) { toast("Offline — add/edit internet aane par hoga", "bad"); return false; } if (S.locked && !S.key) { openKey(); return false; } return true; }
+function canEdit() { if (S.role === "viewer") { toast("Aapko sirf padhne ka access hai (viewer)", "bad"); return false; } if (S.offline || navigator.onLine === false) { toast("Offline — add/edit internet aane par hoga", "bad"); return false; } if (S.locked && !S.key) { openKey(); return false; } return true; }
 function pick(it) { return { cmd: it.cmd, tag: it.tag || "", category: it.category || "", purpose: it.purpose || "", example: it.example || "" }; }
 
 /* ───────────── render ───────────── */
@@ -949,6 +1177,7 @@ $("setupBtn").onclick = function () { showSetup(true); };
     if (!mm.hidden) return close();
     var sl = $("sheetLink"); $("moreSheet").style.display = S.sheetUrl ? "" : "none"; if (S.sheetUrl) $("moreSheet").href = S.sheetUrl;
     $("moreLock").hidden = $("lockBtn").style.display === "none";
+    $("moreSec").hidden = $("secBtn").style.display === "none";
     $("moreLock").textContent = $("lockBtn").textContent;
     $("moreInstall").hidden = !$("installBtn").classList.contains("show");
     mm.hidden = false; mb.setAttribute("aria-expanded", "true");
@@ -1026,18 +1255,27 @@ S.sort = lsGet(LS.sort) || "sheet"; $("sort").value = S.sort; S.view = lsGet(LS.
 S.group = lsGet(LS.group) || "tag"; $("group").value = S.group;
 S.tab = lsGet(LS.tab) || "__all";
 
-(function loadCache() {
+function loadCacheNow() {
   try { var c = JSON.parse(lsGet(LS.cache) || "null"); if (c && c.items) { applyData(c, true); S.lastSync = c.ts || 0; } } catch (e) {}
-})();
+}
 function afterFirstLoad() {
   if (wantTab) { var m = matchTab(wantTab); if (m) { S.tab = m; lsSet(LS.tab, m); } wantTab = null; renderAll(); }
   if (wantNew) { wantNew = false; setTimeout(openAdd, 250); }
 }
-renderAll();
-if (S.loaded) afterFirstLoad();
-if (!gasUrl()) { showSetup(false); }
-else { sync(false).then(function () { if (!S.loaded) return; afterFirstLoad(); }); }
-if (S.offline === false && navigator.onLine === false) { S.offline = true; refreshLive(); }
+function startApp() {
+  loadCacheNow();
+  renderAll();
+  if (S.loaded) afterFirstLoad();
+  sync(false).then(function () { if (!S.loaded) return; afterFirstLoad(); });
+  if (S.offline === false && navigator.onLine === false) { S.offline = true; refreshLive(); }
+}
+if (!gasUrl()) { renderAll(); showSetup(false); }
+else if (AUTH.on) {                                    // data stays hidden until PIN / fingerprint
+  renderAll();
+  if (AUTH.token) showLock("unlock");
+  else { showLock("login"); api("ping").then(function (r) { if (r && r.auth === false) { AUTH.on = false; lsSet(LS.auth, "0"); AUTH.locked = false; $("lock").classList.remove("show"); startApp(); } }).catch(function () {}); }
+}
+else { startApp(); }
 
 })();
 </script>
