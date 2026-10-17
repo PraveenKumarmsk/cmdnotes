@@ -272,11 +272,19 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
 .cpanel .opt .ck{width:16px;color:var(--accent);font-weight:800}
 .cpanel .opt .n{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--faint)}
 .cpanel .none{padding:10px;color:var(--faint);font-size:.85rem}
+/* ── Phone menu (replaces hidden sidebar footer) ───────── */
+#moreBtn{display:none}
+#moreMenu{position:fixed;right:12px;top:calc(58px + var(--sat,0px));z-index:80;min-width:230px;background:var(--panel);border:1px solid var(--line2,var(--line));border-radius:14px;box-shadow:var(--shadow);padding:6px;display:flex;flex-direction:column}
+#moreMenu[hidden]{display:none}
+#moreMenu button,#moreMenu a{display:flex;align-items:center;gap:10px;text-align:left;padding:12px 12px;border-radius:9px;font-size:.92rem;color:var(--text);text-decoration:none;min-height:44px}
+#moreMenu button[hidden]{display:none}
+#moreMenu button:hover,#moreMenu a:hover{background:var(--accent-soft)}
 /* ── Phone ─────────────────────────────────────────────── */
 @media(max-width:860px){
   body{overflow:hidden}
   #app{grid-template-columns:1fr;grid-template-rows:auto 1fr}
   aside{display:none}
+  #moreBtn{display:grid}
   header.top{flex-wrap:wrap;gap:10px 10px;padding:calc(8px + var(--sat)) 12px 10px}
   .brand img{width:30px;height:30px}
   .search{order:3;flex:1 1 100%;max-width:none}
@@ -336,6 +344,14 @@ mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;bor
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       </button>
       <button class="btn primary addtop" id="addTop" type="button">＋ Add command</button>
+      <button class="ibtn" id="moreBtn" type="button" aria-label="Menu" title="Menu" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg></button>
+    </div>
+    <div id="moreMenu" role="menu" hidden>
+      <button type="button" role="menuitem" data-go="newTabBtn">＋ New section (tab)</button>
+      <a id="moreSheet" role="menuitem" href="#" target="_blank" rel="noopener">📄 Open Google Sheet ↗</a>
+      <button type="button" role="menuitem" data-go="lockBtn" id="moreLock" hidden>🔒 Unlock editing</button>
+      <button type="button" role="menuitem" data-go="installBtn" id="moreInstall" hidden>⬇️ Install App</button>
+      <button type="button" role="menuitem" data-go="setupBtn">⚙️ Server settings</button>
     </div>
   </header>
 
@@ -925,6 +941,24 @@ $("keyForm").addEventListener("submit", function (e) {
 /* setup */
 function showSetup(cancelable) { $("sUrl").value = gasUrl(); $("sErr").style.display = "none"; $("sCancel").style.display = cancelable ? "" : "none"; $("setup").style.display = "flex"; }
 $("setupBtn").onclick = function () { showSetup(true); };
+(function () {
+  var mb = $("moreBtn"), mm = $("moreMenu");
+  function close() { mm.hidden = true; mb.setAttribute("aria-expanded", "false"); }
+  mb.onclick = function (e) {
+    e.stopPropagation();
+    if (!mm.hidden) return close();
+    var sl = $("sheetLink"); $("moreSheet").style.display = S.sheetUrl ? "" : "none"; if (S.sheetUrl) $("moreSheet").href = S.sheetUrl;
+    $("moreLock").hidden = $("lockBtn").style.display === "none";
+    $("moreLock").textContent = $("lockBtn").textContent;
+    $("moreInstall").hidden = !$("installBtn").classList.contains("show");
+    mm.hidden = false; mb.setAttribute("aria-expanded", "true");
+  };
+  mm.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-go]"); if (b) { close(); $(b.getAttribute("data-go")).click(); } else if (e.target.closest("a")) close();
+  });
+  document.addEventListener("click", function (e) { if (!mm.hidden && !e.target.closest("#moreMenu")) close(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
+})();
 $("sCancel").onclick = function () { $("setup").style.display = "none"; };
 $("setupForm").addEventListener("submit", function (e) {
   e.preventDefault();
