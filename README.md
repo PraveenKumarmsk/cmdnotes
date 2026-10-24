@@ -219,7 +219,11 @@ Instead of maintaining commands across multiple notebooks, text files, and websi
 
 ## 📄 License
 
-No license has been specified yet. Add a `LICENSE` file if you want to define permissions for others to use, modify, or distribute the project.
+Copyright © 2026 Praveen Kumar. All Rights Reserved.
+
+This project is proprietary. Unauthorized copying, modification, distribution, or commercial use of the source code is prohibited without prior written permission from the copyright owner.
+
+For more information, see the [LICENSE](LICENSE) file.
 
 ---
 
