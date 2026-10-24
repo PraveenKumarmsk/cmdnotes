@@ -1,176 +1,223 @@
-# CMD Notes — Setup Guide (v2)
+# 💻 CMD Notes v2
 
-## 1. Google Sheet Format
+### Smart Command Library | Windows • Linux • Cisco • Networking
 
-Each sheet tab must have the following column headers in **Row 1**:
+CMD Notes is a modern, mobile-friendly command management application powered by **Google Sheets, Google Apps Script, HTML, CSS, and JavaScript**.
 
-| A | B | C | D | E | F | G | H | I |
-|---|---|---|---|---|---|---|---|---|
-| cmds | category | tag | purpose | example | id | favorite | created_at | updated_at |
+Store, organize, search, and manage technical commands in one place. Designed for IT professionals, network engineers, CCNA learners, system administrators, and technology enthusiasts.
 
-### Column Descriptions
+## ✨ Features
 
-- **cmds:** The command or syntax.
-- **category:** The main category or group (e.g., Windows, Cisco, Network).
-- **tag:** A specific topic or subcategory. Multiple tags should be separated by commas, such as `Files & Folders, Network`.
-- **purpose:** A description of what the command does.
-- **example:** An example showing how to use the command.
-- **id, favorite, created_at, updated_at:** These fields are automatically managed by the application. If the columns are missing, the app will create them automatically.
+- 🔍 **Smart Search** — Quickly find commands by name, category, tag, or purpose.
+- 📂 **Category Management** — Organize commands into Windows, Linux, Cisco, Networking, and other categories.
+- 🏷️ **Multiple Tags** — Assign multiple tags to individual commands.
+- ⭐ **Favourites** — Save frequently used commands for quick access.
+- 📊 **Advanced Grouping** — Group commands by category, tag, or section.
+- ↕️ **Flexible Sorting** — Sort alphabetically, by date, favourites, or original sheet order.
+- ☁️ **Google Sheets Integration** — Use Google Sheets as your command database.
+- ✏️ **Command Management** — Add and update commands through the application.
+- 📱 **Responsive Design** — Optimized for desktop, tablet, and mobile devices.
+- 🚀 **PWA Support** — Install CMD Notes as an application on supported devices.
+- 🔐 **Data Protection** — Built-in validation helps prevent writes when sheet headers are misaligned.
 
-**Important Notes:**
-- Any duplicate `updated_at` column (such as Column J) will be ignored. You can safely delete it if unnecessary.
-- If the column headers and data are misaligned, the application will prevent write operations and display a warning to protect your data.
+## 🛠️ Technology Stack
 
-## 2. How to Update the Application
+| Technology | Purpose |
+|---|---|
+| HTML5 | Application structure |
+| CSS3 | Responsive UI and styling |
+| JavaScript | Frontend functionality |
+| Google Sheets | Command database |
+| Google Apps Script | Backend API |
+| Service Worker | PWA functionality |
+| GitHub Pages | Website hosting |
 
-Follow these steps to update your CMD Notes application.
+## 📁 Project Structure
 
-### Step 1: Update Google Apps Script
+```text
+CMD-Notes/
+│
+├── index.html       # Main application
+├── sw.js            # PWA service worker
+├── Code.gs          # Google Apps Script backend
+├── GUIDE.md         # Setup and usage instructions
+└── README.md        # Project documentation
+```
 
-1. Open your Google Apps Script project.
-2. Open the `Code.gs` file.
-3. Replace the entire existing code with the latest version.
-4. Click **Save**.
+## 📊 Google Sheets Database Setup
 
-### Step 2: Deploy the Updated Script
+Create a Google Spreadsheet with the following headers in **Row 1** of each command sheet.
 
-1. Navigate to **Deploy → Manage deployments**.
-2. Click the **Edit (✏️)** icon.
-3. Under Version, select **New version**.
+| Column | Header |
+|---|---|
+| A | cmds |
+| B | category |
+| C | tag |
+| D | purpose |
+| E | example |
+| F | id |
+| G | favorite |
+| H | created_at |
+| I | updated_at |
+
+### Important Notes
+
+- `category` represents the main command group.
+- `tag` supports multiple comma-separated values.
+- `id`, `favorite`, `created_at`, and `updated_at` are automatically managed by the application.
+- Missing system columns are automatically created.
+- Duplicate `updated_at` columns are ignored.
+- Misaligned headers trigger a safety warning and prevent write operations.
+- Every visible Google Sheet tab becomes a separate application section.
+- Tabs beginning with `_` are excluded.
+
+## ⚙️ Installation & Setup
+
+### Step 1 — Configure Google Sheets
+
+1. Create a new Google Spreadsheet.
+2. Add the required column headers.
+3. Create separate tabs for different command sections, such as Windows, Linux, Cisco, and Networking.
+
+### Step 2 — Configure Google Apps Script
+
+1. Open your Google Spreadsheet.
+2. Navigate to **Extensions → Apps Script**.
+3. Open `Code.gs`.
+4. Paste the latest backend code.
+5. Save your changes.
+
+### Step 3 — Deploy the Backend
+
+1. Click **Deploy → New deployment**.
+2. Select **Web app**.
+3. Configure the deployment:
+
+   - **Execute as:** Me
+   - **Who has access:** Anyone
+
 4. Click **Deploy**.
+5. Copy the generated Web App URL.
 
-Verify the deployment settings:
+**Security note:** An Apps Script deployment accessible to anyone is a public endpoint. Ensure the backend validates authorization for every operation that modifies data. Do not rely on a hidden admin button or frontend-only password for security.
 
-- **Execute as:** Me
-- **Who has access:** Anyone
+### Step 4 — Configure the Frontend
 
-### Step 3: Update GitHub Files
+Open `index.html` and configure the application to use your deployed Apps Script Web App URL, following the configuration used in your project.
 
-Open your GitHub repository and upload or replace the following files:
+### Step 5 — Publish on GitHub Pages
 
-- `index.html`
-- `sw.js`
-- `GUIDE.md`
+1. Create a GitHub repository.
+2. Upload the project files.
+3. Navigate to **Settings → Pages**.
+4. Under **Build and deployment**, select **Deploy from a branch**.
+5. Choose the `main` branch and `/ (root)` folder.
+6. Save the settings.
 
-Commit the changes to your repository.
+Your website will be available at a URL similar to:
 
-### Step 4: Refresh the Website
+`https://yourusername.github.io/CMD-Notes/`
 
-Open your CMD Notes website and refresh the page.
+## 🔄 Updating CMD Notes
 
-For mobile users, close the application completely and reopen it to load the latest version.
+When releasing a new version:
 
-## 3. Organizing Commands
+1. Replace the existing Apps Script code in `Code.gs`.
+2. Save the project.
+3. Navigate to **Deploy → Manage deployments**.
+4. Select **Edit → New version → Deploy**.
+5. Update `index.html`, `sw.js`, and `GUIDE.md` in GitHub.
+6. Commit the changes.
+7. Refresh the application.
 
-CMD Notes provides several features to organize and manage commands efficiently.
+If the installed PWA continues displaying an older version, close and reopen it. The service worker may need to activate before the update appears.
 
-### Category and Tag Filters
+## 🗂️ Command Organization
 
-- Use the **Category** and **Tag** chips at the top to filter commands.
-- Click a category badge or hashtag on any command card to apply the corresponding filter automatically.
+### Categories
 
-### Grouping Options
+Organize commands into major groups such as:
 
-Use the **Group** dropdown to organize commands by:
+- Windows CMD
+- PowerShell
+- Linux
+- Cisco IOS
+- Networking
+- Troubleshooting
 
-- **Tag:** Group commands based on their tags.
-- **Category:** Group commands by their main categories.
-- **Section:** Group commands according to their Google Sheet tabs.
-- **No grouping:** Display all commands without grouping.
+### Tags
 
-Click any group header to expand or collapse its contents.
+Use comma-separated tags to classify commands.
 
-### Sorting Options
+Example:
 
-Use the **Sort** dropdown to arrange commands by:
+`Files & Folders, Network, Troubleshooting`
+
+### Grouping
+
+Available grouping options:
+
+- Tag
+- Category
+- Section
+- No grouping
+
+### Sorting
+
+Available sorting options:
 
 - Sheet order
-- Alphabetical order (A–Z)
-- Newest first
+- A–Z
+- Newest
 - Recently updated
 - Favourites first
 
-### Favourite Commands
+## 📱 PWA Installation
 
-- Click the **⭐ Star** icon on any command to mark it as a favourite.
-- Access saved commands through the **Favourites** section in the sidebar or mobile filter chips.
+**Desktop:** Open the website in Chrome or Edge and select the browser's installation option or the in-app Install button.
 
-## 4. Progressive Web App (PWA)
+**Android:** Open the website in Chrome and select Install App or Add to Home Screen.
 
-CMD Notes supports PWA installation, allowing you to use the website like a regular application.
+**iOS:** Open the website in Safari, tap Share, and select Add to Home Screen.
 
-### Windows / Desktop
+## 🧩 Troubleshooting
 
-1. Open CMD Notes in Google Chrome or Microsoft Edge.
-2. Click the **Install** icon in the browser address bar, or use the application's **Install** button.
-3. Confirm the installation.
+### Categories or Tags Not Appearing?
 
-### Android
+Your Apps Script deployment may be outdated.
 
-1. Open CMD Notes in Chrome.
-2. Tap the **Install App** option when available.
-3. Follow the installation instructions.
-4. Once installed, long-press the app icon to access supported shortcuts.
+**Solution:**
 
-### iPhone / iPad
+1. Update `Code.gs`.
+2. Save your changes.
+3. Deploy a new version.
+4. Refresh the application.
 
-1. Open CMD Notes in Safari.
-2. Tap the **Share** button.
-3. Select **Add to Home Screen**.
-4. Confirm to add the application.
+If the deployed `/exec` endpoint does not return `"v":3`, verify that the latest backend version has been deployed.
 
-## 5. Troubleshooting: Missing Tags or Sheet Sections
+### Unable to Add or Update Commands?
 
-If new tags or Google Sheet tabs such as **Windows, Linux, or Cisco** are not appearing in the application, your Google Apps Script deployment may be outdated.
+Check that:
 
-### How to Identify an Outdated Deployment
+- Google Sheet headers match the required structure.
+- The Apps Script deployment is current.
+- The frontend is configured with the correct Web App URL.
+- Backend authorization and deployment permissions are correctly configured.
 
-You may notice either of these issues:
+## 🎯 Project Purpose
 
-- A yellow warning banner appears at the top of the application stating **"Code.gs is outdated."**
-- Opening the deployed Apps Script `/exec` URL in your browser does not return `"v":3` in its response.
+CMD Notes was developed to make technical command learning, documentation, and management simpler.
 
-### How to Fix It
+Instead of maintaining commands across multiple notebooks, text files, and websites, users can organize their knowledge in a centralized, searchable command library.
 
-1. Open your Google Apps Script project.
-2. Replace the entire `Code.gs` content with the latest version.
-3. Save the project.
-4. Navigate to **Deploy → Manage deployments**.
-5. Click **Edit (✏️)**.
-6. Select **New version**.
-7. Click **Deploy**.
-8. Refresh the CMD Notes application.
-
-### Automatic Section Detection
-
-Every visible tab in your Google Spreadsheet automatically becomes a separate **Section** in CMD Notes.
-
-For example:
-
-| Google Sheet Tab | CMD Notes Section |
-|---|---|
-| Windows | Windows |
-| Linux | Linux |
-| Cisco | Cisco |
-| Networking | Networking |
-
-**Note:** Tabs whose names begin with an underscore (`_`) are excluded from automatic section detection.
+**Learn. Save. Organize. Execute.**
 
 ---
 
-## 6. Final Setup Checklist
+## 📄 License
 
-Before using CMD Notes, verify the following:
+No license has been specified yet. Add a `LICENSE` file if you want to define permissions for others to use, modify, or distribute the project.
 
-- [ ] Google Sheet headers are correctly configured.
-- [ ] The latest `Code.gs` is saved.
-- [ ] Google Apps Script is deployed using a new version.
-- [ ] Deployment permissions are correctly configured.
-- [ ] Updated `index.html`, `sw.js`, and `GUIDE.md` files are committed to GitHub.
-- [ ] The website loads the latest version.
-- [ ] Categories, tags, and sections are displayed correctly.
-- [ ] Command filtering, grouping, and sorting work properly.
-- [ ] Favourite commands can be saved and accessed.
-- [ ] The PWA can be installed on supported devices.
+---
 
-**CMD Notes v2 — A Smart Command Library for Windows, Linux, Cisco, and Networking.**
+**CMD Notes v2 — Your Commands. Your Knowledge. One Dashboard.**
