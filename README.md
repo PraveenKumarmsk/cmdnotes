@@ -37,11 +37,14 @@ Store, organize, search, and manage technical commands in one place. Designed fo
 ```text
 CMD-Notes/
 │
-├── index.html       # Main application
-├── sw.js            # PWA service worker
-├── Code.gs          # Google Apps Script backend
-├── GUIDE.md         # Setup and usage instructions
-└── README.md        # Project documentation
+├── icons/
+├── Code.gs
+├── GUIDE.md
+├── README.md
+├── index.html
+├── manifest.json
+├── offline.html
+└── sw.js
 ```
 
 ## 📊 Google Sheets Database Setup
